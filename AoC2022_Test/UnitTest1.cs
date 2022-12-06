@@ -13,7 +13,6 @@ namespace AoC2022_Test
         public void Test1()
         {
             Assert.Pass();
-            dss
         }
     }
 }
