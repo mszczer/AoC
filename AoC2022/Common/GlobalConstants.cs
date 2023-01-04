@@ -1,7 +1,12 @@
 ﻿namespace AoC.AoC2022.Common
 {
-    public class GlobalConstants
+    public static class GlobalConstants
     {
-        public const string InputDataPath = "InputDataPath";
+        public static string InputDataPath => "InputDataPath";
     }
 }
+
+/*
+ * ToDo:
+ * Replace global constants with class fetching configuration data (Llama example)
+ */
