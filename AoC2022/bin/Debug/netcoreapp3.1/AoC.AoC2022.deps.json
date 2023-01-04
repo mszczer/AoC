@@ -6,12 +6,12 @@
   "compilationOptions": {},
   "targets": {
     ".NETCoreApp,Version=v3.1": {
-      "AoC2022/1.0.0": {
+      "AoC.AoC2022/1.0.0": {
         "dependencies": {
           "System.Configuration.ConfigurationManager": "7.0.0"
         },
         "runtime": {
-          "AoC2022.dll": {}
+          "AoC.AoC2022.dll": {}
         }
       },
       "System.Configuration.ConfigurationManager/7.0.0": {
@@ -89,7 +89,7 @@
     }
   },
   "libraries": {
-    "AoC2022/1.0.0": {
+    "AoC.AoC2022/1.0.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

@@ -1,6 +1,6 @@
 using NUnit.Framework;
 
-namespace AoC2022_Test
+namespace AoC.AoC2022Test
 {
     public class Tests
     {
