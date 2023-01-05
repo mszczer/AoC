@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using Microsoft.Extensions.Configuration;
 
 namespace AoC.AoC2022.Common
 {
@@ -7,10 +8,21 @@ namespace AoC.AoC2022.Common
     {
         private readonly string _dayName;
         protected T InputData;
+        protected Settings Settings;
 
         protected AoC(string dayName)
         {
             _dayName = dayName;
+            
+            // Build a config object, using env vars and JSON providers.
+            IConfiguration config = new ConfigurationBuilder()
+                .AddJsonFile("appsettings.json")
+                .AddEnvironmentVariables()
+                .Build();
+
+            // Get values from the config given their key and their target type.
+            Settings = config.GetRequiredSection("Settings").Get<Settings>();
+
             InputData = ParseInputFile();
         }
 
@@ -25,8 +37,7 @@ namespace AoC.AoC2022.Common
 
         private T ParseInputFile()
         {
-            //var inputFile = ConfigurationManager.AppSettings.Get(GlobalConstants.InputDataPath) + $"{_dayName}.txt"; //ConfigurationManager.AppSettings maja z tym problem
-            var inputFile = @$"InputData\{_dayName}.txt";
+            var inputFile =  $"{Settings.InputDataPath}{_dayName}.txt";
             var inputText = File.ReadAllLines(inputFile);
             return (T)Activator.CreateInstance(typeof(T), new object[] { inputText });
         }
