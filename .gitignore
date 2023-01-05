@@ -6,3 +6,7 @@
 /AoC2022/obj
 /AoC2022_Test/obj
 /AoC2022_Test/bin/Debug/netcoreapp3.1
+/AoC2022/bin/Debug/netcoreapp3.1/AoC.AoC2022.dll
+/AoC2022/bin/Debug/netcoreapp3.1/AoC.AoC2022.dll.config
+/AoC2022/bin/Debug/netcoreapp3.1/appsettings.json
+/AoC2022/bin/Debug/netcoreapp3.1/AoC.AoC2022.pdb
