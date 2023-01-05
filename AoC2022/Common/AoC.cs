@@ -13,7 +13,7 @@ namespace AoC.AoC2022.Common
         protected AoC(string dayName)
         {
             _dayName = dayName;
-            
+
             // Build a config object, using env vars and JSON providers.
             IConfiguration config = new ConfigurationBuilder()
                 .AddJsonFile("appsettings.json")
@@ -37,7 +37,7 @@ namespace AoC.AoC2022.Common
 
         private T ParseInputFile()
         {
-            var inputFile =  $"{Settings.InputDataPath}{_dayName}.txt";
+            var inputFile = $"{Settings.InputDataPath}{_dayName}.txt";
             var inputText = File.ReadAllLines(inputFile);
             return (T)Activator.CreateInstance(typeof(T), new object[] { inputText });
         }
