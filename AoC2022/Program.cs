@@ -8,8 +8,8 @@ namespace AoC.AoC2022
     {
         private static void Main(string[] args)
         {
-            //var inputFilePath = ConfigurationManager.AppSettings.Get(GlobalConstants.InputDataPath) + "Day01.txt";
-            //var fileHelper = new FileHelper();
+            new Day01("Day01").PrintResults();
+
             Console.ReadKey();
         }
     }
