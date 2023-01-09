@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Configuration;
-using AoC.AoC2022.Common;
 
 namespace AoC.AoC2022
 {

@@ -1,6 +1,6 @@
-﻿using System;
+﻿using Microsoft.Extensions.Configuration;
+using System;
 using System.IO;
-using Microsoft.Extensions.Configuration;
 
 namespace AoC.AoC2022.Common
 {

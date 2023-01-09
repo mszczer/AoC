@@ -1,26 +1,29 @@
-using System;
-using System.Runtime.CompilerServices;
-using NUnit.Framework;
 using AoC.AoC2022;
-using AoC.AoC2022.Common;
-using System.Configuration;
+using NUnit.Framework;
 
 namespace AoC.AoC2022Test
 {
     public class TestDay01
     {
         private const string TestDayNumber = "Test_Day01";
+        private Day01 _day;
 
         [SetUp]
         public void Setup()
         {
-            var day = new Day01(TestDayNumber);
+            _day = new Day01(TestDayNumber);
         }
 
         [Test]
-        public void Test1()
+        public void Day01_Part1_EndToEnd()
         {
-            Assert.Pass();
+            Assert.That(_day.CalculatePart1(), Is.EqualTo(24000));
+        }
+
+        [Test]
+        public void Day01_Part2_EndToEnd()
+        {
+            Assert.That(_day.CalculatePart2(), Is.EqualTo(45000));
         }
     }
 }
