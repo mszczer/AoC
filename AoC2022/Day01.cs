@@ -42,7 +42,7 @@ namespace AoC.AoC2022
             return maxCalories;
         }
 
-        private List<int> CalculateCaloriesPerElf()
+        private IEnumerable<int> CalculateCaloriesPerElf()
         {
             var caloriesCarried = new List<int>();
             var elfCalories = 0;
