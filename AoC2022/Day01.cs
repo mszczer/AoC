@@ -1,5 +1,6 @@
-﻿using AoC.AoC2022.Common;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Linq;
+using AoC.AoC2022.Common;
 
 namespace AoC.AoC2022
 {
@@ -17,13 +18,7 @@ namespace AoC.AoC2022
         public override int CalculatePart2()
         {
             var caloriesList = CalculateCaloriesPerElf();
-            caloriesList.Sort();
-            caloriesList.Reverse();
-            var sumTopThree = 0;
-            for (var i = 0; i < 3; i++)
-                sumTopThree += caloriesList[i];
-
-            return sumTopThree;
+            return caloriesList.OrderByDescending(i => i).Take(3).Sum();
         }
 
         private int CalculateMaxCaloriesCarried()
