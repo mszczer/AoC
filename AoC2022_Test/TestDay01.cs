@@ -3,6 +3,7 @@ using NUnit.Framework;
 
 namespace AoC.AoC2022Test
 {
+    [TestFixture]
     public class TestDay01
     {
         private const string TestDayNumber = "Test_Day01";
