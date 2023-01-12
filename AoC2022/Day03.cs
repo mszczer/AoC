@@ -52,7 +52,23 @@ namespace AoC.AoC2022
 
         public override int CalculatePart2()
         {
-            return 2;
+            return CalculatePrioritiesTotal(FindBadges());
+        }
+
+        private List<char> FindBadges()
+        {
+            var badges = new List<char>();
+
+            for (var i = 0; i < InputData.Count; i++)
+                if ((i + 1) % 3 == 0)
+                    foreach (var c in InputData[i])
+                        if (InputData[i - 1].Contains(c) && InputData[i - 2].Contains(c))
+                        {
+                            badges.Add(c);
+                            break;
+                        }
+
+            return badges;
         }
     }
 }
