@@ -6,7 +6,7 @@ namespace AoC.AoC2022
 {
     internal class Day04 : AoC<List<string>, int, int>
     {
-        private static List<AssignmentSections> _assignmentSections;
+        private readonly List<AssignmentSections> _assignmentSections;
 
         public Day04(string dayName) : base(dayName)
         {
@@ -39,7 +39,7 @@ namespace AoC.AoC2022
             return CalculateDuplicatedAssignments();
         }
 
-        private static int CalculateDuplicatedAssignments()
+        private int CalculateDuplicatedAssignments()
         {
             //foreach (var assignment in _assignmentSections)
             //    if (IsEntireSectionOverlapped(assignment)) numberOfOverlaps++;
@@ -59,7 +59,7 @@ namespace AoC.AoC2022
             return CalculateOverlapsAtAll();
         }
 
-        private static int CalculateOverlapsAtAll()
+        private int CalculateOverlapsAtAll()
         {
             return _assignmentSections.Count(IsOverlap);
         }
