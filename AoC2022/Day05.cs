@@ -113,10 +113,8 @@ namespace AoC.AoC2022
             return GetAllTops(stacks);
         }
 
-        private void MoveMultipleCrates(IReadOnlyList<Stack> stacks, int quantity, int source, int target)
+        private static void MoveMultipleCrates(IReadOnlyList<Stack> stacks, int quantity, int source, int target)
         {
-            GetInitialStacks();
-
             var tempStack = new Stack();
 
             for (var i = 0; i < quantity; i++)
