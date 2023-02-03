@@ -1,21 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using AoC.AoC2022.Common;
 
 namespace AoC.AoC2022
 {
     internal class Day07 : AoC<List<string>, int, int>
     {
-        //private const int MaxFolderSizeRequired = 100000;
-        //private const int TotalDiskSpaceAvailable = 70000000;
-        //private const int SpaceNeededForUpdate = 30000000;
+        //private const string ChangeDirOutermost = "$ cd /";
+        //private const string ChangeDirOut = "$ cd ..";
+        //private const string ChangeDirIn = "$ cd ";
 
-        private const string ChangeDirOutermost = "$ cd /";
-        private const string ChangeDirOut = "$ cd ..";
-        private const string ChangeDirIn = "$ cd ";
-
-        private const string Directory = "dir";
+        //private const string Directory = "dir";
 
         private readonly FileTreeNode _rootNode;
 
@@ -66,10 +63,12 @@ namespace AoC.AoC2022
 
         private static void AddFileTreeElement(string command, FileTreeNode currentFolder)
         {
+            const string directory = "dir";
+
             var splitCommand = command.Split(" ");
             if (!currentFolder.ChildExists(splitCommand[1]))
             {
-                var isDirectory = splitCommand[0] == Directory;
+                var isDirectory = splitCommand[0] == directory;
                 var newNode = new FileTreeNode(splitCommand[1], isDirectory)
                 {
                     Parent = currentFolder
@@ -82,11 +81,15 @@ namespace AoC.AoC2022
 
         private static FileTreeNode ExecuteCommand(string command, FileTreeNode rootFolder, FileTreeNode currentFolder)
         {
+            const string changeDirOutermost = "$ cd /";
+            const string changeDirOut = "$ cd ..";
+            const string changeDirIn = "$ cd ";
+
             var newCurrentFolder = currentFolder;
 
-            if (command.StartsWith(ChangeDirOutermost)) newCurrentFolder = rootFolder;
-            else if (command.StartsWith(ChangeDirOut)) newCurrentFolder = currentFolder.Parent;
-            else if (command.StartsWith(ChangeDirIn)) newCurrentFolder = currentFolder.GetChild(command[5..]);
+            if (command.StartsWith(changeDirOutermost)) newCurrentFolder = rootFolder;
+            else if (command.StartsWith(changeDirOut)) newCurrentFolder = currentFolder.Parent;
+            else if (command.StartsWith(changeDirIn)) newCurrentFolder = currentFolder.GetChild(command[5..]);
 
             return newCurrentFolder;
         }
@@ -118,7 +121,36 @@ namespace AoC.AoC2022
 
         public override int CalculatePart2()
         {
-            return -2;
+            const int diskSpaceAvailable = 70000000;
+            const int unusedSpaceExpected = 30000000;
+            var unusedSpaceAvailable = diskSpaceAvailable - _rootNode.Size;
+            var unusedSpaceRequired = unusedSpaceExpected - unusedSpaceAvailable;
+
+            return SizeOfSmallestDirectoryToFreeUpEnoughSpace(_rootNode,unusedSpaceRequired);
+        }
+
+        private static int SizeOfSmallestDirectoryToFreeUpEnoughSpace(FileTreeNode fileTreeElement, int threshold)
+        {
+            var directorySizeList = new List<int>();
+            GetDirectorySizes(fileTreeElement, directorySizeList);
+
+            directorySizeList.Sort();
+
+            foreach (var size in directorySizeList)
+                if (size >= threshold)
+                    return size;
+
+            return fileTreeElement.Size;
+        }
+
+        private static void GetDirectorySizes(FileTreeNode fileTreeElement, ICollection<int> directorySizeList)
+        {
+            if (fileTreeElement.IsDirectory)
+            {
+                directorySizeList.Add(fileTreeElement.Size);
+                foreach (var child in fileTreeElement.GetAllChildren())
+                    GetDirectorySizes(child, directorySizeList);
+            }
         }
     }
 
