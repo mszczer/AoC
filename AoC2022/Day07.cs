@@ -1,30 +1,34 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.InteropServices;
 using AoC.AoC2022.Common;
 
 namespace AoC.AoC2022
 {
     internal class Day07 : AoC<List<string>, int, int>
     {
-        //private const string ChangeDirOutermost = "$ cd /";
-        //private const string ChangeDirOut = "$ cd ..";
-        //private const string ChangeDirIn = "$ cd ";
-
-        //private const string Directory = "dir";
-
         private readonly FileTreeNode _rootNode;
 
         public Day07(string dayName) : base(dayName)
         {
             _rootNode = GetFilesTree(InputData);
-            //PrintFilesTree(_rootNode);
         }
 
-        private void PrintFilesTree(FileTreeNode rootNode)
+        public void PrintFilesTree()
         {
-            throw new NotImplementedException();
+            PrintTree(_rootNode, "", true);
+        }
+
+        private static void PrintTree(FileTreeNode fileTreeElement, string indent, bool lastNode)
+        {
+            Console.WriteLine(indent + "- "+ fileTreeElement.Name);
+            indent += lastNode ? " " : "| ";
+
+            for (var i = 0; i < fileTreeElement.Count; i++)
+            {
+                PrintTree(fileTreeElement.GetAllChildren()[i],indent, i == fileTreeElement.Count-1);
+            }
+
         }
 
         private static FileTreeNode GetFilesTree(List<string> terminalOutput)
@@ -109,7 +113,7 @@ namespace AoC.AoC2022
             int totalSize)
         {
             if (!fileTreeElement.IsDirectory) return totalSize;
-            
+
             foreach (var child in fileTreeElement.GetAllChildren())
                 totalSize = SumOfTotalSizesOfDirectoriesBelowThreshold(child, threshold, totalSize);
 
@@ -126,7 +130,7 @@ namespace AoC.AoC2022
             var unusedSpaceAvailable = diskSpaceAvailable - _rootNode.Size;
             var unusedSpaceRequired = unusedSpaceExpected - unusedSpaceAvailable;
 
-            return SizeOfSmallestDirectoryToFreeUpEnoughSpace(_rootNode,unusedSpaceRequired);
+            return SizeOfSmallestDirectoryToFreeUpEnoughSpace(_rootNode, unusedSpaceRequired);
         }
 
         private static int SizeOfSmallestDirectoryToFreeUpEnoughSpace(FileTreeNode fileTreeElement, int threshold)
@@ -197,5 +201,7 @@ namespace AoC.AoC2022
         {
             return _children.Values.ToList();
         }
+
+        public int Count => this._children.Count;
     }
 }
