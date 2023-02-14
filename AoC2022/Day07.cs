@@ -21,14 +21,11 @@ namespace AoC.AoC2022
 
         private static void PrintTree(FileTreeNode fileTreeElement, string indent, bool lastNode)
         {
-            Console.WriteLine(indent + "- "+ fileTreeElement.Name);
+            Console.WriteLine(indent + "- " + fileTreeElement.Name);
             indent += lastNode ? " " : "| ";
 
             for (var i = 0; i < fileTreeElement.Count; i++)
-            {
-                PrintTree(fileTreeElement.GetAllChildren()[i],indent, i == fileTreeElement.Count-1);
-            }
-
+                PrintTree(fileTreeElement.GetAllChildren()[i], indent, i == fileTreeElement.Count - 1);
         }
 
         private static FileTreeNode GetFilesTree(List<string> terminalOutput)
@@ -202,6 +199,6 @@ namespace AoC.AoC2022
             return _children.Values.ToList();
         }
 
-        public int Count => this._children.Count;
+        public int Count => _children.Count;
     }
 }
