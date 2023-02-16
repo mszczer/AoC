@@ -82,7 +82,91 @@ namespace AoC.AoC2022
 
         public override int CalculatePart2()
         {
-            return -2;
+            var highestScenicScore = 0;
+
+            for (var row = 0; row < _grid.GetLength(0); row++)
+            for (var column = 0; column < _grid.GetLength(1); column++)
+            {
+                var scenicScore = CalculateScenicScore(row, column);
+                if (scenicScore > highestScenicScore) highestScenicScore = scenicScore;
+            }
+
+            return highestScenicScore;
+        }
+
+        private int CalculateScenicScore(int row, int column)
+        {
+            //stop if you reach an edge or at the first tree that is the same height
+            //or taller than the tree under consideration
+
+            var upScore = 0;
+            var rightScore = 0;
+            var downScore = 0;
+            var leftScore = 0;
+
+            for (var i = row - 1; i >= 0; i--)
+            {
+                upScore++;
+                if (_grid[i, column] >= _grid[row, column]) break;
+            }
+                //if (_grid[i, column] < _grid[row, column])
+                //{
+                //    upScore++;
+                //}
+                //else
+                //{
+                //    upScore++;
+                //    break;
+                //}
+
+                for (var i = column + 1; i < _grid.GetLength(1); i++)
+                {
+                    rightScore++;
+                    if (_grid[row, i] >= _grid[row, column]) break;
+
+                }
+                //if (_grid[row, i] < _grid[row, column])
+                //{
+                //    rightScore++;
+                //}
+                //else
+                //{
+                //    rightScore++;
+                //    break;
+                //}
+
+                for (var i = row + 1; i < _grid.GetLength(0); i++)
+                {
+                    downScore++;
+                    if (_grid[i, column] >= _grid[row, column]) break;
+                }
+                //if (_grid[i, column] < _grid[row, column])
+                //{
+                //    downScore++;
+                //}
+                //else
+                //{
+                //    downScore++;
+                //    break;
+                //}
+
+                for (var i = column - 1; i >= 0; i--)
+                {
+                    leftScore++;
+                    if (_grid[row, i] >= _grid[row, column]) break;
+                }
+                //if (_grid[row, i] < _grid[row, column])
+                //{
+                //    leftScore++;
+                //}
+                //else
+                //{
+                //    leftScore++;
+                //    break;
+                //}
+
+
+            return upScore * rightScore * downScore * leftScore;
         }
     }
 }
