@@ -109,62 +109,24 @@ namespace AoC.AoC2022
                 upScore++;
                 if (_grid[i, column] >= _grid[row, column]) break;
             }
-                //if (_grid[i, column] < _grid[row, column])
-                //{
-                //    upScore++;
-                //}
-                //else
-                //{
-                //    upScore++;
-                //    break;
-                //}
 
-                for (var i = column + 1; i < _grid.GetLength(1); i++)
-                {
-                    rightScore++;
-                    if (_grid[row, i] >= _grid[row, column]) break;
+            for (var i = column + 1; i < _grid.GetLength(1); i++)
+            {
+                rightScore++;
+                if (_grid[row, i] >= _grid[row, column]) break;
+            }
 
-                }
-                //if (_grid[row, i] < _grid[row, column])
-                //{
-                //    rightScore++;
-                //}
-                //else
-                //{
-                //    rightScore++;
-                //    break;
-                //}
+            for (var i = row + 1; i < _grid.GetLength(0); i++)
+            {
+                downScore++;
+                if (_grid[i, column] >= _grid[row, column]) break;
+            }
 
-                for (var i = row + 1; i < _grid.GetLength(0); i++)
-                {
-                    downScore++;
-                    if (_grid[i, column] >= _grid[row, column]) break;
-                }
-                //if (_grid[i, column] < _grid[row, column])
-                //{
-                //    downScore++;
-                //}
-                //else
-                //{
-                //    downScore++;
-                //    break;
-                //}
-
-                for (var i = column - 1; i >= 0; i--)
-                {
-                    leftScore++;
-                    if (_grid[row, i] >= _grid[row, column]) break;
-                }
-                //if (_grid[row, i] < _grid[row, column])
-                //{
-                //    leftScore++;
-                //}
-                //else
-                //{
-                //    leftScore++;
-                //    break;
-                //}
-
+            for (var i = column - 1; i >= 0; i--)
+            {
+                leftScore++;
+                if (_grid[row, i] >= _grid[row, column]) break;
+            }
 
             return upScore * rightScore * downScore * leftScore;
         }
