@@ -13,7 +13,8 @@ namespace AoC.AoC2022
             //new Day05("Day05").PrintResults();
             //new Day06("Day06").PrintResults();
             //new Day07("Day07").PrintResults();
-            new Day08("Day08").PrintResults();
+            //new Day08("Day08").PrintResults();
+            new Day09("Day09").PrintResults();
 
             Console.ReadKey();
         }
