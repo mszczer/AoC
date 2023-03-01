@@ -32,6 +32,8 @@ namespace AoC.AoC2022
                 case "D":
                     head.Y--;
                     break;
+                default:
+                    throw new InvalidOperationException("Unexpected value 'direction' = " + direction);
             }
         }
 
