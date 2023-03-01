@@ -54,7 +54,6 @@ namespace AoC.AoC2022
             }
         }
 
-
         private static void FollowHead(Point head, ref Point tail, string direction)
         {
             if (head.X > tail.X) tail.X++;
