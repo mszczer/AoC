@@ -13,26 +13,7 @@ namespace AoC.AoC2022
 
         public override int CalculatePart1()
         {
-            var positions = new List<Point>();
-            var head = new Point(0, 0);
-            var tail = new Point(0, 0);
-            positions.Add(tail);
-
-            foreach (var motion in InputData)
-            {
-                var command = motion.Split(" ");
-                var direction = command[0];
-                var steps = int.Parse(command[1]);
-
-                for (var i = 0; i < steps; i++)
-                {
-                    MoveHead(direction, ref head);
-                    if (!PointsTouching(head, tail)) FollowHead(head, ref tail, direction);
-                    if (!positions.Contains(tail)) positions.Add(tail);
-                }
-            }
-
-            return positions.Count;
+            return CountTailPositions(InputData, 2);
         }
 
         private static void MoveHead(string direction, ref Point head)
@@ -70,11 +51,16 @@ namespace AoC.AoC2022
 
         public override int CalculatePart2()
         {
-            var tailPositions = new List<Point>();
-            var knotsPositions = new List<Point>(new Point[10]);
-            tailPositions.Add(knotsPositions[9]);
+            return CountTailPositions(InputData, 10);
+        }
 
-            foreach (var motion in InputData)
+        private static int CountTailPositions(List<string> instructions, int numberOfKnots)
+        {
+            var tailPositions = new List<Point>();
+            var knotsPositions = new List<Point>(new Point[numberOfKnots]);
+            tailPositions.Add(knotsPositions[numberOfKnots - 1]);
+
+            foreach (var motion in instructions)
             {
                 var command = motion.Split(" ");
                 var direction = command[0];
@@ -86,7 +72,7 @@ namespace AoC.AoC2022
                     MoveHead(direction, ref head);
                     knotsPositions[0] = head;
 
-                    for (var knot = 0; knot < 9; knot++)
+                    for (var knot = 0; knot < numberOfKnots - 1; knot++)
                     {
                         var tmpHead = knotsPositions[knot];
                         var tmpTail = knotsPositions[knot + 1];
@@ -95,8 +81,8 @@ namespace AoC.AoC2022
                         knotsPositions[knot + 1] = tmpTail;
                     }
 
-                    if (!tailPositions.Contains(knotsPositions[9]))
-                        tailPositions.Add(knotsPositions[9]);
+                    if (!tailPositions.Contains(knotsPositions[numberOfKnots - 1]))
+                        tailPositions.Add(knotsPositions[numberOfKnots - 1]);
                 }
             }
 
