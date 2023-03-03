@@ -49,7 +49,7 @@ namespace AoC.AoC2022
                         var tmpHead = knotsPositions[knot];
                         var tmpTail = knotsPositions[knot + 1];
                         if (!PointsTouching(tmpHead, tmpTail))
-                            FollowHead(tmpHead, ref tmpTail, motion.Item1);
+                            FollowHead(tmpHead, ref tmpTail);
                         knotsPositions[knot + 1] = tmpTail;
                     }
 
@@ -81,7 +81,7 @@ namespace AoC.AoC2022
             }
         }
 
-        private static void FollowHead(Point head, ref Point tail, string direction)
+        private static void FollowHead(Point head, ref Point tail)
         {
             if (head.X > tail.X) tail.X++;
             if (head.X < tail.X) tail.X--;
