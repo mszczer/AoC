@@ -4,7 +4,7 @@ using Microsoft.Extensions.Configuration;
 
 namespace AoC.AoC2022.Common
 {
-    public abstract class AoC<T, TResult1, TResult2> : IAoC<TResult1, TResult1> where T : new()
+    public abstract class AoC<T, TResult1, TResult2> : IAoC<TResult1, TResult2> where T : new()
     {
         private readonly string _dayName;
         protected T InputData;
@@ -27,7 +27,7 @@ namespace AoC.AoC2022.Common
         }
 
         public abstract TResult1 CalculatePart1();
-        public abstract TResult1 CalculatePart2();
+        public abstract TResult2 CalculatePart2();
 
         public void PrintResults()
         {

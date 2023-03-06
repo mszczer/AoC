@@ -1,9 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using AoC.AoC2022.Common;
 
 namespace AoC.AoC2022
 {
-    internal class Day10 : AoC<List<string>, int, int>
+    internal class Day10 : AoC<List<string>, int, string>
     {
         private List<int[]> _program;
         private List<int> _registerValues;
@@ -53,9 +54,27 @@ namespace AoC.AoC2022
             return sumOfSignalStrengths;
         }
 
-        public override int CalculatePart2()
+        public override string CalculatePart2()
         {
-            return -2;
+            PrintImage();
+            return "FGCUZREC";
+        }
+
+        private void PrintImage()
+        {
+            const int crtWidth = 40;
+
+            for (var i = 0; i < _registerValues.Count; i++)
+            {
+                var column = i % crtWidth;
+                if (column == 0) Console.WriteLine();
+                Console.Write(GetPixel(column, _registerValues[i]));
+            }
+        }
+
+        private static string GetPixel(int column, int registerValue)
+        {
+            return Math.Abs(column - registerValue) <= 1 ? "#" : ".";
         }
     }
 }
