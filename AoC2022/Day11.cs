@@ -4,16 +4,12 @@ using AoC.AoC2022.Common;
 
 namespace AoC.AoC2022
 {
-    internal class Day11 : AoC<List<string>, long, int>
+    internal class Day11 : AoC<List<string>, long, long>
     {
         private readonly List<Monkey> _monkeys = new List<Monkey>();
 
-        private readonly List<long> _inspections = new List<long>(); 
-            // is property in Monkey object better (to verify after part 2)?
-
         public Day11(string dayName) : base(dayName)
         {
-            GetMonkeys();
         }
 
         private void GetMonkeys()
@@ -60,8 +56,6 @@ namespace AoC.AoC2022
                             divisibleByValue, throwToIfTrue, throwToIfFalse);
                         _monkeys.Add(tmpMonkey);
 
-                        _inspections.Add(0); // is property in Monkey object better (to verify after part 2)?
-
                         worryLevels.Clear();
                         multiplyOperation = 0;
                         addOperation = 0;
@@ -79,49 +73,56 @@ namespace AoC.AoC2022
 
         public override long CalculatePart1()
         {
-            InspectAndThrowTheItems(20);
+            _monkeys.Clear();
+            GetMonkeys();
+            InspectAndThrowTheItems(20, 3);
             return LevelOfMonkeyBusiness();
         }
 
         private long LevelOfMonkeyBusiness()
         {
-            var mostActiveInspections = _inspections.OrderByDescending(i => i).Take(2).ToList();
-            return mostActiveInspections[0] * mostActiveInspections[1];
+            var mostActiveMonkeys = _monkeys.OrderByDescending(i => i.Inspections).Take(2).ToList();
+            return mostActiveMonkeys[0].Inspections * mostActiveMonkeys[1].Inspections;
         }
 
-        private void InspectAndThrowTheItems(int totalRounds)
+        private void InspectAndThrowTheItems(int totalRounds, int worryLevelDivider)
         {
             for (var round = 0; round < totalRounds; round++)
-                for (var i = 0; i < _monkeys.Count; i++)
+            for (var i = 0; i < _monkeys.Count; i++)
+            {
+                _monkeys[i].InspectTheItem(worryLevelDivider);
+
+                foreach (var worryLevel in _monkeys[i].WorryLevels)
                 {
-                    _monkeys[i].InspectTheItem();
+                    var monkeyId = _monkeys[i].IdentifyThrowToMonkey(worryLevel);
+                    _monkeys[monkeyId].AddWorryLevel(worryLevel);
 
-                    foreach (var worryLevel in _monkeys[i].WorryLevels)
-                    {
-                        var monkeyId = _monkeys[i].IdentifyThrowToMonkey(worryLevel);
-                        _monkeys[monkeyId].AddWorryLevel(worryLevel);
-
-                        _inspections[i]++; // is property in Monkey object better (to verify after part 2)?
-                    }
-
-                    _monkeys[i].WorryLevels.Clear();
+                    _monkeys[i].Inspections++;
                 }
+
+                _monkeys[i].WorryLevels.Clear();
+            }
         }
 
-        public override int CalculatePart2()
+        public override long CalculatePart2()
         {
-            return -2;
+            _monkeys.Clear();
+            GetMonkeys();
+            InspectAndThrowTheItems(10000, 1);
+            return LevelOfMonkeyBusiness();
         }
     }
 
     internal class Monkey
     {
         public List<long> WorryLevels { get; }
+        public long Inspections { get; set; }
         private readonly int _multiplyOperation;
         private readonly int _addOperation;
         private readonly int _divisibleByValue;
         private readonly int _throwToIfTrue;
         private readonly int _throwToIfFalse;
+
 
         public Monkey(List<long> worryLevels, int multiplyOperation, int addOperation,
             int divisibleByValue, int throwToIfTrue, int throwToIfFalse)
@@ -132,12 +133,13 @@ namespace AoC.AoC2022
             _divisibleByValue = divisibleByValue;
             _throwToIfTrue = throwToIfTrue;
             _throwToIfFalse = throwToIfFalse;
+            Inspections = 0;
         }
 
-        public void InspectTheItem()
+        public void InspectTheItem(int worryLevelDivider)
         {
             for (var i = 0; i < WorryLevels.Count; i++)
-                WorryLevels[i] = ApplyOperation(WorryLevels[i]) / 3;
+                WorryLevels[i] = ApplyOperation(WorryLevels[i]) / worryLevelDivider;
         }
 
         private long ApplyOperation(long old)

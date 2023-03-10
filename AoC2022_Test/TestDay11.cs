@@ -24,7 +24,7 @@ namespace AoC.AoC2022Test
         [Test]
         public void Day11_Part2_EndToEnd()
         {
-            Assert.That(_day.CalculatePart2(), Is.EqualTo(8));
+            Assert.That(_day.CalculatePart2(), Is.EqualTo(2713310158));
         }
     }
 }
