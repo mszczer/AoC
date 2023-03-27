@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using AoC.AoC2022.Common;
 
@@ -45,6 +46,9 @@ namespace AoC.AoC2022
 
                 switch (monkeyDetail)
                 {
+                    case 0:
+                    case 1:
+                        break;
                     case 2:
                     {
                         var startingItems = line[18..].Split(',');
@@ -77,6 +81,9 @@ namespace AoC.AoC2022
                         addOperation = 0;
                         break;
                     }
+                    default:
+                        throw new InvalidOperationException("Unexpected value in input file");
+
                 }
             }
         }
