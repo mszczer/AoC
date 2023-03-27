@@ -12,6 +12,22 @@ namespace AoC.AoC2022
         {
         }
 
+        public override long CalculatePart1()
+        {
+            _monkeys.Clear();
+            GetMonkeys();
+            InspectAndThrowTheItems(20, 3);
+            return LevelOfMonkeyBusiness();
+        }
+
+        public override long CalculatePart2()
+        {
+            _monkeys.Clear();
+            GetMonkeys();
+            InspectAndThrowTheItems(10000, 1);
+            return LevelOfMonkeyBusiness();
+        }
+
         private void GetMonkeys()
         {
             var worryLevels = new List<long>();
@@ -71,73 +87,45 @@ namespace AoC.AoC2022
             return startingItems.Select(long.Parse).ToList();
         }
 
-        public override long CalculatePart1()
-        {
-            _monkeys.Clear();
-            GetMonkeys();
-            InspectAndThrowTheItems(20, 3);
-            return LevelOfMonkeyBusiness();
-        }
-
         private long LevelOfMonkeyBusiness()
         {
             var mostActiveMonkeys = _monkeys.OrderByDescending(i => i.Inspections).Take(2).ToList();
             return mostActiveMonkeys[0].Inspections * mostActiveMonkeys[1].Inspections;
         }
 
+        /* Common multiple of all divisibility checks:
+         * Take the modulo of the new worry level with that common multiple before throwing the item.
+         * This will not affect any future divisibility checks.
+         */
         private long GetCommonMultipleOfDivisibilityChecks()
         {
             return _monkeys.Aggregate(1, (current, monkey) => current * monkey.DivisibleByValue);
         }
 
+        /*
+         * It doesn’t matter if we first apply operation multiply and then take the modulo (Part 1)
+         * or take the modulo and then apply operation (Part 2).
+         */
         private void InspectAndThrowTheItems(int totalRounds, int worryLevelDivider)
-        {
-            for (var round = 0; round < totalRounds; round++)
-                for (var monkeyId = 0; monkeyId < _monkeys.Count; monkeyId++)
-                {
-                    _monkeys[monkeyId].InspectTheItem(worryLevelDivider);
-
-                    foreach (var worryLevel in _monkeys[monkeyId].WorryLevels)
-                    {
-                        var toMonkey = _monkeys[monkeyId].IdentifyThrowToMonkey(worryLevel);
-                        _monkeys[toMonkey].AddWorryLevel(worryLevel);
-                        _monkeys[monkeyId].Inspections++;
-                    }
-
-                    _monkeys[monkeyId].WorryLevels.Clear();
-                }
-        }
-
-        private void InspectAndThrowTheItems(int totalRounds)
         {
             var commonMultiply = GetCommonMultipleOfDivisibilityChecks();
 
             for (var round = 0; round < totalRounds; round++)
-                for (var i = 0; i < _monkeys.Count; i++)
+                foreach (var monkey in _monkeys)
                 {
-                    _monkeys[i].InspectTheItem(1);
+                    monkey.InspectTheItem(worryLevelDivider);
 
-                    foreach (var worryLevel in _monkeys[i].WorryLevels)
+                    foreach (var worryLevel in monkey.WorryLevels)
                     {
                         var newWorryLevel = worryLevel % commonMultiply;
 
-                        var monkeyId = _monkeys[i].IdentifyThrowToMonkey(newWorryLevel);
-                        _monkeys[monkeyId].AddWorryLevel(newWorryLevel);
-                        _monkeys[i].Inspections++;
+                        var toMonkey = monkey.IdentifyThrowToMonkey(newWorryLevel);
+                        _monkeys[toMonkey].AddWorryLevel(newWorryLevel);
+                        monkey.Inspections++;
                     }
 
-                    _monkeys[i].WorryLevels.Clear();
+                    monkey.WorryLevels.Clear();
                 }
-        }
-
-        public override long CalculatePart2()
-        {
-            _monkeys.Clear();
-            GetMonkeys();
-
-            InspectAndThrowTheItems(10000);
-
-            return LevelOfMonkeyBusiness();
         }
     }
 
@@ -145,12 +133,11 @@ namespace AoC.AoC2022
     {
         public List<long> WorryLevels { get; }
         public long Inspections { get; set; }
+        public int DivisibleByValue { get; }
         private readonly int _multiplyOperation;
         private readonly int _addOperation;
-        public int DivisibleByValue { get; }
         private readonly int _trueRecipient;
         private readonly int _falseRecipient;
-
 
         public Monkey(List<long> worryLevels, int multiplyOperation, int addOperation,
             int divisibleByValue, int trueRecipient, int falseRecipient)
