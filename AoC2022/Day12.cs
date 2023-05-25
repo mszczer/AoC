@@ -1,18 +1,16 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Text;
 using AoC.AoC2022.Common;
 
 namespace AoC.AoC2022
 {
-    internal class Day12:AoC<List<string>, int, int>
+    internal class Day12 : AoC<List<string>, int, int>
     {
         private int[,] _heightsMap;
         private Point _startPoint;
         private Point _endPoint;
- 
+
         public Day12(string dayName) : base(dayName)
         {
             GetHeightsMap();
@@ -25,21 +23,21 @@ namespace AoC.AoC2022
 
             _heightsMap = new int[numberOfRows, numberOfColumns];
             for (var row = 0; row < numberOfRows; row++)
-                for (var column = 0; column < numberOfColumns; column++)
-                    if (InputData[row][column] == 'S')
-                    {
-                        _startPoint = new Point(row, column);
-                        _heightsMap[row, column] = 0;
-                    }
-                    else if (InputData[row][column] == 'E')
-                    {
-                        _endPoint = new Point(row, column);
-                        _heightsMap[row, column] = 26;
-                    }
-                    else
-                    {
-                        _heightsMap[row, column] = InputData[row][column] - 'a';
-                    }
+            for (var column = 0; column < numberOfColumns; column++)
+                if (InputData[row][column] == 'S')
+                {
+                    _startPoint = new Point(row, column);
+                    _heightsMap[row, column] = 0;
+                }
+                else if (InputData[row][column] == 'E')
+                {
+                    _endPoint = new Point(row, column);
+                    _heightsMap[row, column] = 26;
+                }
+                else
+                {
+                    _heightsMap[row, column] = InputData[row][column] - 'a';
+                }
         }
 
         public override int CalculatePart1()
@@ -72,24 +70,20 @@ namespace AoC.AoC2022
                     GetNeighborsWhichCanVisitCurrentHill(currentHill.X, currentHill.Y, heightsMap);
 
                 foreach (var neighbor in neighborsWhichCanVisit)
-                {
                     if (distances[neighbor.X, neighbor.Y] == maxDist)
                     {
-                        distances[neighbor.X, neighbor.Y] = distances[currentHill.X,currentHill.Y]+1;
+                        distances[neighbor.X, neighbor.Y] = distances[currentHill.X, currentHill.Y] + 1;
                         pointsToCheck.Enqueue(new Point(neighbor.X, neighbor.Y));
                     }
-                }
 
-                if(currentHill ==  startPoint)
+                if (currentHill == startPoint)
                     return distances[startPoint.X, startPoint.Y];
-
             }
 
             return 0;
-
         }
 
-        private List<Point> GetNeighborsWhichCanVisitCurrentHill(int row, int column, int[,] heightsMap)
+        private static List<Point> GetNeighborsWhichCanVisitCurrentHill(int row, int column, int[,] heightsMap)
         {
             var neighborsWhichCanVisit = new List<Point>();
             var currentHeight = heightsMap[row, column];
@@ -119,6 +113,5 @@ namespace AoC.AoC2022
 
 
 /*
- * We don't need Dijkstra, A* or other generalised graph searching algorithms,
- * https://www.codeproject.com/Articles/1221034/Pathfinding-Algorithms-in-Csharp
+ * ToDo: Dijkstra, A* or other generalized graph searching algorithms: https://www.codeproject.com/Articles/1221034/Pathfinding-Algorithms-in-Csharp
  */

@@ -4,7 +4,6 @@
     {
         public static T[,] GetTwoDimensionalArray<T>(int rows, int columns, T initValue)
         {
-            var type = typeof(T);
             var array = new T[rows, columns];
             for (var r = 0; r < rows; r++)
             for (var c = 0; c < columns; c++)
