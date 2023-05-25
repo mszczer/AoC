@@ -43,9 +43,9 @@ namespace AoC.AoC2022
             var secondCompartment = rucksack.Substring(compartmentLimit, compartmentLimit);
 
             foreach (var c1 in firstCompartment)
-            foreach (var c2 in secondCompartment)
-                if (c1 == c2 && !duplicatesPerRucksack.Contains(c1))
-                    duplicatesPerRucksack.Add(c1);
+                foreach (var c2 in secondCompartment)
+                    if (c1 == c2 && !duplicatesPerRucksack.Contains(c1))
+                        duplicatesPerRucksack.Add(c1);
 
             return duplicatesPerRucksack;
         }

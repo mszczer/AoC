@@ -20,8 +20,8 @@ namespace AoC.AoC2022
             _grid = new int[numberOfRows, numberOfColumns];
 
             for (var row = 0; row < numberOfRows; row++)
-            for (var column = 0; column < numberOfColumns; column++)
-                _grid[row, column] = int.Parse(InputData[row][column].ToString());
+                for (var column = 0; column < numberOfColumns; column++)
+                    _grid[row, column] = int.Parse(InputData[row][column].ToString());
         }
 
         public override int CalculatePart1()
