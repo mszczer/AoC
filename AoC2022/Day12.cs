@@ -52,7 +52,7 @@ namespace AoC.AoC2022
         * 4. If the neighboring point has not been visited before (the height is maximum available), add its location and current distance +1 to the back of the todo queue.
         * 5. Repeat from step 2 until we reach the start point.
         */
-        private int GetDistanceToEnd(int[,] heightsMap, Point startPoint, Point endPoint)
+        private static int GetDistanceToEnd(int[,] heightsMap, Point startPoint, Point endPoint)
         {
             const int maxDist = int.MaxValue;
             var distances =
