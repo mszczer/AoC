@@ -16,15 +16,15 @@ namespace AoC.AoC2022Test
         }
 
         [Test]
-        public void Day11_Part1_EndToEnd()
+        public void Day12_Part1_EndToEnd()
         {
             Assert.That(_day.CalculatePart1(), Is.EqualTo(31));
         }
 
         [Test]
-        public void Day11_Part2_EndToEnd()
+        public void Day12_Part2_EndToEnd()
         {
-            Assert.That(_day.CalculatePart2(), Is.EqualTo(27133));
+            Assert.That(_day.CalculatePart2(), Is.EqualTo(29));
         }
     }
 }

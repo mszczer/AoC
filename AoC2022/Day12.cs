@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Reflection;
+using System.Security.Policy;
 using AoC.AoC2022.Common;
 
 namespace AoC.AoC2022
@@ -23,21 +26,21 @@ namespace AoC.AoC2022
 
             _heightsMap = new int[numberOfRows, numberOfColumns];
             for (var row = 0; row < numberOfRows; row++)
-            for (var column = 0; column < numberOfColumns; column++)
-                if (InputData[row][column] == 'S')
-                {
-                    _startPoint = new Point(row, column);
-                    _heightsMap[row, column] = 0;
-                }
-                else if (InputData[row][column] == 'E')
-                {
-                    _endPoint = new Point(row, column);
-                    _heightsMap[row, column] = 26;
-                }
-                else
-                {
-                    _heightsMap[row, column] = InputData[row][column] - 'a';
-                }
+                for (var column = 0; column < numberOfColumns; column++)
+                    if (InputData[row][column] == 'S')
+                    {
+                        _startPoint = new Point(row, column);
+                        _heightsMap[row, column] = 0;
+                    }
+                    else if (InputData[row][column] == 'E')
+                    {
+                        _endPoint = new Point(row, column);
+                        _heightsMap[row, column] = 26;
+                    }
+                    else
+                    {
+                        _heightsMap[row, column] = InputData[row][column] - 'a';
+                    }
         }
 
         public override int CalculatePart1()
@@ -45,13 +48,13 @@ namespace AoC.AoC2022
             return GetDistanceToEnd(_heightsMap, _startPoint, _endPoint);
         }
 
-        /*
-        * 1. Start at the end point and change its path distance to 0;
-        * 2. Add the end point to a 'todo' queue of points to process.
-        * 3. Get the point and distance off the front of the queue; find its immediate neighboring points that could flow into it.
-        * 4. If the neighboring point has not been visited before (the height is maximum available), add its location and current distance +1 to the back of the todo queue.
-        * 5. Repeat from step 2 until we reach the start point.
-        */
+        /// <summary>
+        /// 1. Start at the end point and change its path distance to 0;
+        /// 2. Add the end point to a 'todo' queue of points to process.
+        /// 3. Get the point and distance off the front of the queue; find its immediate neighboring points that could flow into it.
+        /// 4. If the neighboring point has not been visited before (the height is maximum available), add its location and current distance +1 to the back of the todo queue.
+        /// 5. Repeat from step 2 until we reach the start point.
+        /// </summary>
         private static int GetDistanceToEnd(int[,] heightsMap, Point startPoint, Point endPoint)
         {
             const int maxDist = int.MaxValue;
@@ -80,7 +83,7 @@ namespace AoC.AoC2022
                     return distances[startPoint.X, startPoint.Y];
             }
 
-            return 0;
+            return maxDist;
         }
 
         private static List<Point> GetNeighborsWhichCanVisitCurrentHill(int row, int column, int[,] heightsMap)
@@ -106,12 +109,30 @@ namespace AoC.AoC2022
 
         public override int CalculatePart2()
         {
-            throw new NotImplementedException();
+            var lowestPoints = new List<Point>();
+
+            var row = _heightsMap.GetLength(0);
+            var col = _heightsMap.GetLength(1);
+
+            for(var r=0;r<row;r++)
+                for (var c=0;c<col;c++)
+                    if (_heightsMap[r,c]==0)
+                        lowestPoints.Add(new Point(r,c));
+            
+            var theFewestSteps = Int32.MaxValue;
+            foreach (var pointToCheck in lowestPoints)
+            {
+                var distance = GetDistanceToEnd(_heightsMap, pointToCheck, _endPoint);
+                if(distance < theFewestSteps) theFewestSteps = distance;
+            }
+
+            return theFewestSteps;
+            
         }
     }
 }
 
-
 /*
- * ToDo: Dijkstra, A* or other generalized graph searching algorithms: https://www.codeproject.com/Articles/1221034/Pathfinding-Algorithms-in-Csharp
+ * ToDo: Dijkstra, A* or other generalized graph searching algorithms:
+ * https://www.codeproject.com/Articles/1221034/Pathfinding-Algorithms-in-Csharp
  */
