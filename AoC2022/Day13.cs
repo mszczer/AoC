@@ -74,8 +74,9 @@ namespace AoC.AoC2022
 
                     packet = tmpStack.Peek();
                 }
-                else if (c == ',') // Skip comma
+                else if (c == ',') 
                 {
+                    // Skip comma
                 }
                 else if (char.IsDigit(c))
                 {
