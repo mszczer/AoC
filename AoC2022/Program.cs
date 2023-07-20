@@ -17,7 +17,8 @@ namespace AoC.AoC2022
             //new Day09("Day09").PrintResults();
             //new Day10("Day10").PrintResults();
             //new Day11("Day11").PrintResults();
-            new Day12("Day12").PrintResults();
+            //new Day12("Day12").PrintResults();
+            new Day13("Day13").PrintResults();
 
             Console.ReadKey();
         }
