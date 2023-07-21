@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using AoC.AoC2022.Common;
 
 namespace AoC.AoC2022
@@ -7,10 +8,14 @@ namespace AoC.AoC2022
     internal class Day13 : AoC<List<string>, int, int>
     {
         private List<(object, object)> _packets;
+        private List<object> _sortedPackets;
+        private readonly List<string> _dividers;
 
         public Day13(string dayName) : base(dayName)
         {
             GetDistressSignal();
+            _dividers = new List<string> { "[[2]]", "[[6]]" };
+            GetDistressSignal(_dividers);
         }
 
         private void GetDistressSignal()
@@ -41,6 +46,28 @@ namespace AoC.AoC2022
                         throw new InvalidOperationException("Unexpected value in input file");
                 }
             }
+        }
+
+        private void GetDistressSignal(List<string> dividers)
+        {
+            _sortedPackets = new List<object>();
+
+            object pocketValue;
+
+            foreach (var pocket in InputData.Where(pocket => pocket != ""))
+            {
+                pocketValue = ParsePocket(pocket);
+                _sortedPackets.Add(pocketValue);
+            }
+
+            foreach (var divider in dividers)
+            {
+                pocketValue = ParsePocket(divider);
+                _sortedPackets.Add(pocketValue);
+            }
+
+            _sortedPackets.Sort(ComparePockets);
+            _sortedPackets.Reverse();
         }
 
         /*
@@ -153,7 +180,22 @@ namespace AoC.AoC2022
 
         public override int CalculatePart2()
         {
-            return 0;
+            var decoderKey = 1;
+
+            //foreach (var divider in _dividers)
+            //{
+            //    var dividerValue = ParsePocket(divider);
+            //    dividerObjects.Add(dividerValue);
+            //}
+            var dividerObjects = _dividers.Select(ParsePocket).Cast<object>().ToList();
+
+
+            for (var idx = 0; idx < _sortedPackets.Count; idx++)
+                foreach (var divider in dividerObjects)
+                    if (ComparePockets(_sortedPackets[idx], divider) == 0)
+                        decoderKey *= idx + 1;
+
+            return decoderKey;
         }
     }
 }
