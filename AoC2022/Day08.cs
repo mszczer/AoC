@@ -79,7 +79,7 @@ namespace AoC.AoC2022
                     return false;
             }
 
-            return false;
+            return true;
         }
 
         public override int CalculatePart2()
