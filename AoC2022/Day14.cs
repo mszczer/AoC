@@ -8,6 +8,7 @@ namespace AoC.AoC2022
     {
         public Day14(string dayName) : base(dayName)
         {
+
         }
 
         public override int CalculatePart1()
