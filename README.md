@@ -1,1 +1,2 @@
-[![Codacy Badge](https://app.codacy.com/project/badge/Grade/1dc4509d170d435fa75b904cd7bbbd61)](https://www.codacy.com/gl/maciej58/aoc2022/dashboard?utm_source=gitlab.com&amp;utm_medium=referral&amp;utm_content=maciej58/aoc2022&amp;utm_campaign=Badge_Grade)
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/95ac6c88fad04c6fb2c4b4fdec33cf7b)](https://app.codacy.com/gh/mszczer/AoC/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
+
