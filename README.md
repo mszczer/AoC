@@ -5,11 +5,11 @@
 # Advent of Code Solutions Repository
 
 ## Description
-This repository contains my solutions to various coding challenges presented in [Advent of Code](https://adventofcode.com/). Advent of Code is an Advent calendar of small programming puzzles.
+This repository contains solutions to various coding challenges presented in [Advent of Code](https://adventofcode.com/). Advent of Code is an Advent calendar of small programming puzzles.
 
 ## Contents
 - Each challenge solution is organized within a class, named descriptively according to the challenge. The code is written in C# .NET Core.
-- Comprehensive test suites are included for each challenge, ensuring the correctness of the solutions.
+- Test suites are included for each challenge, ensuring the correctness of the solutions.
 - In addition to challenge solutions, there are helper classes that provide common functionalities.
 - Code analysis is implemented to maintain code quality and readability.
 - A CI/CD workflow is set up to automate the build, testing, and generation of test reports. It also uploads test coverage reports to Codacy.
