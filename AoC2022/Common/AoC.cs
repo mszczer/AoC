@@ -37,7 +37,7 @@ namespace AoC.AoC2022.Common
 
         private T ParseInputFile()
         {
-            var inputFile = $"{Settings.InputDataPath}{_dayName}.txt";
+            var inputFile = Path.Combine(Settings.InputDataPath, $"{_dayName}.txt");
             var inputText = File.ReadAllLines(inputFile);
             return (T)Activator.CreateInstance(typeof(T), new object[] { inputText });
         }
