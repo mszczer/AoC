@@ -19,7 +19,7 @@ This repository contains solutions to various coding challenges presented in [Ad
 - This repository includes code written in .NET core.
 
 ## Acknowledgments
-- Thanks to the [Advent of Code](https://adventofcode.com/) platform for providing these intriguing coding challenges each year, fostering a vibrant coding community.
+- [Advent of Code](https://adventofcode.com/) platform providing coding challenges each year, fostering a vibrant coding community.
 
 ## License
 
