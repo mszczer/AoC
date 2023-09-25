@@ -4,6 +4,7 @@ using NUnit.Framework;
 namespace AoC.AoC2022Test
 {
     [TestFixture]
+    [Parallelizable(ParallelScope.All)]
     public class TestDay04
     {
         private const string TestDayNumber = "Test_Day04";
