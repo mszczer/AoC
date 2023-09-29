@@ -1,24 +1,123 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.Text.RegularExpressions;
 using AoC.AoC2022.Common;
 
-namespace AoC.AoC2022
+namespace AoC.AoC2022;
+
+internal class Day14 : AoC<List<string>, int, int>
 {
-    internal class Day14 : AoC<List<string>, int, int>
+    private List<Point> _rockPoints;
+    private int _maxDepth;
+
+    public Day14(string dayName) : base(dayName)
     {
-        public Day14(string dayName) : base(dayName)
-        {
+        GetInitialPaths();
+    }
 
+    private void GetInitialPaths()
+    {
+        _maxDepth = 0;
+        _rockPoints = new List<Point>();
+
+        foreach (var path in InputData)
+        {
+            // get points of direction change
+            var coordinates = Regex.Split(path, @"\D+");
+            var turningPoints = new List<Point>();
+            var x = 0;
+            var y = 0;
+
+            for (var i = 0; i < coordinates.Length; i++)
+                if (i % 2 == 0)
+                {
+                    x = int.Parse(coordinates[i]);
+                }
+                else
+                {
+                    y = int.Parse(coordinates[i]);
+                    turningPoints.Add(new Point(x, y));
+                }
+
+            // get all points on path of rocks
+            for (var i = 1; i < turningPoints.Count; i++)
+            {
+                var pathPoints = GetPointsOnPath(turningPoints[i - 1], turningPoints[i]);
+                foreach (var point in pathPoints)
+                    if (!_rockPoints.Contains(point))
+                    {
+                        _rockPoints.Add(point);
+
+                        // get max depth (the last one before 'infinite' fall)
+                        if (point.Y > _maxDepth)
+                            _maxDepth = point.Y;
+                    }
+            }
+        }
+    }
+
+    private static IEnumerable<Point> GetPointsOnPath(Point start, Point end)
+    {
+        var pointsOnPath = new List<Point>();
+
+        if (start.X == end.X)
+        {
+            if (start.Y > end.Y)
+                (start.Y, end.Y) = (end.Y, start.Y);
+
+            for (var i = start.Y; i <= end.Y; i++)
+                pointsOnPath.Add(new Point(start.X, i));
+        }
+        else
+        {
+            if (start.X > end.X)
+                (start.X, end.X) = (end.X, start.X);
+            for (var i = start.X; i <= end.X; i++)
+                pointsOnPath.Add(new Point(i, start.Y));
         }
 
-        public override int CalculatePart1()
+        return pointsOnPath;
+    }
+
+    public override int CalculatePart1()
+    {
+        var sandUnits = 0;
+        var restPoint = new Point();
+
+        while (restPoint.Y < _maxDepth)
         {
-            throw new NotImplementedException();
+            restPoint = GetRestPoint(new Point(500, 0), _rockPoints, _maxDepth);
+            if (!_rockPoints.Contains(restPoint))
+                _rockPoints.Add(restPoint);
+            sandUnits++;
         }
 
-        public override int CalculatePart2()
-        {
-            throw new NotImplementedException();
-        }
+        sandUnits--;    // do not count 'infinite' sand unit
+
+        return sandUnits;
+    }
+
+    private static Point GetRestPoint(Point sandPoint, List<Point> rockPoints, int maxDepth)
+    {
+        Point restPoint;
+
+        if (sandPoint.Y > maxDepth)
+            return sandPoint;
+        if (!rockPoints.Contains(new Point(sandPoint.X, sandPoint.Y + 1)))
+            restPoint = GetRestPoint(new Point(sandPoint.X, sandPoint.Y + 1), rockPoints, maxDepth);
+        else if (!rockPoints.Contains(new Point(sandPoint.X - 1, sandPoint.Y + 1)))
+            restPoint = GetRestPoint(new Point(sandPoint.X - 1, sandPoint.Y + 1), rockPoints, maxDepth);
+        else if (!rockPoints.Contains(new Point(sandPoint.X + 1, sandPoint.Y + 1)))
+            restPoint = GetRestPoint(new Point(sandPoint.X + 1, sandPoint.Y + 1), rockPoints, maxDepth);
+        else
+            restPoint = new Point(sandPoint.X, sandPoint.Y);
+
+        return restPoint;
+    }
+
+    public override int CalculatePart2()
+    {
+        throw new NotImplementedException();
     }
 }
