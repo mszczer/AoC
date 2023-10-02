@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Drawing;
 using System.Text.RegularExpressions;
 using AoC.AoC2022.Common;
@@ -85,20 +84,23 @@ internal class Day14 : AoC<List<string>, int, int>
         var sandUnits = 0;
         var restPoint = new Point();
 
+        var rockPoints = new List<Point>();
+        rockPoints.AddRange(_rockPoints);
+
         while (restPoint.Y < _maxDepth)
         {
-            restPoint = GetRestPoint(new Point(500, 0), _rockPoints, _maxDepth);
-            if (!_rockPoints.Contains(restPoint))
-                _rockPoints.Add(restPoint);
+            restPoint = GetRestPoint(new Point(500, 0), rockPoints, _maxDepth);
+            if (!rockPoints.Contains(restPoint))
+                rockPoints.Add(restPoint);
             sandUnits++;
         }
 
-        sandUnits--;    // do not count 'infinite' sand unit
+        sandUnits--; // do not count endless fall
 
         return sandUnits;
     }
 
-    private static Point GetRestPoint(Point sandPoint, List<Point> rockPoints, int maxDepth)
+    private static Point GetRestPoint(Point sandPoint, ICollection<Point> rockPoints, int maxDepth)
     {
         Point restPoint;
 
@@ -111,13 +113,47 @@ internal class Day14 : AoC<List<string>, int, int>
         else if (!rockPoints.Contains(new Point(sandPoint.X + 1, sandPoint.Y + 1)))
             restPoint = GetRestPoint(new Point(sandPoint.X + 1, sandPoint.Y + 1), rockPoints, maxDepth);
         else
-            restPoint = new Point(sandPoint.X, sandPoint.Y);
+            restPoint = sandPoint;
 
         return restPoint;
     }
 
     public override int CalculatePart2()
     {
-        throw new NotImplementedException();
+        var sandUnits = 0;
+        var falling = true;
+
+        var rockPoints = new List<Point>();
+        rockPoints.AddRange(_rockPoints);
+
+        while (falling)
+        {
+            var restPoint = GetRestPointWithDepthLimit(new Point(500, 0), rockPoints, _maxDepth + 2);
+            if (!rockPoints.Contains(restPoint))
+                rockPoints.Add(restPoint);
+            if (restPoint.Y == 0)
+                falling = false;
+            sandUnits++;
+        }
+
+        return sandUnits;
+    }
+
+    private static Point GetRestPointWithDepthLimit(Point sandPoint, ICollection<Point> rockPoints, int maxDepth)
+    {
+        Point restPoint;
+
+        if (sandPoint.Y + 1 == maxDepth)
+            restPoint = sandPoint;
+        else if (!rockPoints.Contains(new Point(sandPoint.X, sandPoint.Y + 1)))
+            restPoint = GetRestPointWithDepthLimit(new Point(sandPoint.X, sandPoint.Y + 1), rockPoints, maxDepth);
+        else if (!rockPoints.Contains(new Point(sandPoint.X - 1, sandPoint.Y + 1)))
+            restPoint = GetRestPointWithDepthLimit(new Point(sandPoint.X - 1, sandPoint.Y + 1), rockPoints, maxDepth);
+        else if (!rockPoints.Contains(new Point(sandPoint.X + 1, sandPoint.Y + 1)))
+            restPoint = GetRestPointWithDepthLimit(new Point(sandPoint.X + 1, sandPoint.Y + 1), rockPoints, maxDepth);
+        else
+            restPoint = sandPoint;
+
+        return restPoint;
     }
 }
