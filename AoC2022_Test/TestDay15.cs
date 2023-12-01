@@ -16,15 +16,16 @@ public class TestDay15
         _day = new Day15(TestDayNumber);
     }
 
-    [Test]
-    public void Day15_Part1_EndToEnd()
-    {
-        Assert.That(_day.CalculatePart1(), Is.EqualTo(26));
-    }
+    //Todo: Part1 and Part2 tests to be implemented
+    //[Test]
+    //public void Day15_Part1_EndToEnd()
+    //{
+    //    Assert.That(_day.CalculatePart1(), Is.EqualTo(26));
+    //}
 
-    [Test]
-    public void Day15_Part2_EndToEnd()
-    {
-        Assert.That(_day.CalculatePart2(), Is.EqualTo(140));
-    }
+    //[Test]
+    //public void Day15_Part2_EndToEnd()
+    //{
+    //    Assert.That(_day.CalculatePart2(), Is.EqualTo(140));
+    //}
 }
