@@ -1,27 +1,19 @@
 ﻿using System;
 using System.IO;
-using Microsoft.Extensions.Configuration;
 
 namespace AoC.AoC2022.Common
 {
     public abstract class AoC<T, TResult1, TResult2> : IAoC<TResult1, TResult2> where T : new()
     {
         private readonly string _dayName;
+        private readonly string _inputDirectory;
         protected T InputData;
         protected Settings Settings;
 
-        protected AoC(string dayName)
+        protected AoC(string dayName, string inputDirectory = "InputData")
         {
             _dayName = dayName;
-
-            // Build a config object, using env vars and JSON providers.
-            IConfiguration config = new ConfigurationBuilder()
-                .AddJsonFile("appsettings.json")
-                .AddEnvironmentVariables()
-                .Build();
-
-            // Get values from the config given their key and their target type.
-            Settings = config.GetRequiredSection("Settings").Get<Settings>();
+            _inputDirectory = inputDirectory;
 
             InputData = ParseInputFile();
         }
@@ -37,7 +29,7 @@ namespace AoC.AoC2022.Common
 
         private T ParseInputFile()
         {
-            var inputFile = Path.Combine(Settings.InputDataPath, $"{_dayName}.txt");
+            var inputFile = Path.Combine($"{_inputDirectory}", $"{_dayName}.txt");
             var inputText = File.ReadAllLines(inputFile);
             return (T)Activator.CreateInstance(typeof(T), new object[] { inputText });
         }
