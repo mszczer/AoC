@@ -1,37 +1,39 @@
 ﻿using System;
 using System.IO;
 
-namespace AoC.AoC2022.Common
+namespace AoC.AoC2022.Common;
+
+public abstract class AoC<T, TResult1, TResult2> : IAoC<TResult1, TResult2> where T : new()
 {
-    public abstract class AoC<T, TResult1, TResult2> : IAoC<TResult1, TResult2> where T : new()
+    private readonly string _dayName;
+    private readonly string _inputDirectory;
+    protected T InputData;
+
+    protected AoC(string dayName, string inputDirectory)
     {
-        private readonly string _dayName;
-        private readonly string _inputDirectory;
-        protected T InputData;
-        protected Settings Settings;
+        _dayName = dayName;
+        _inputDirectory = inputDirectory;
 
-        protected AoC(string dayName, string inputDirectory = "InputData")
-        {
-            _dayName = dayName;
-            _inputDirectory = inputDirectory;
+        InputData = ParseInputFile();
+    }
 
-            InputData = ParseInputFile();
-        }
+    protected AoC(string dayName) : this(dayName, "InputData")
+    {
+    }
 
-        public abstract TResult1 CalculatePart1();
-        public abstract TResult2 CalculatePart2();
+    public abstract TResult1 CalculatePart1();
+    public abstract TResult2 CalculatePart2();
 
-        public void PrintResults()
-        {
-            Console.WriteLine($"{_dayName} part1 answer: {CalculatePart1()}");
-            Console.WriteLine($"{_dayName} part2 answer: {CalculatePart2()}");
-        }
+    public void PrintResults()
+    {
+        Console.WriteLine($"{_dayName} part1 answer: {CalculatePart1()}");
+        Console.WriteLine($"{_dayName} part2 answer: {CalculatePart2()}");
+    }
 
-        private T ParseInputFile()
-        {
-            var inputFile = Path.Combine($"{_inputDirectory}", $"{_dayName}.txt");
-            var inputText = File.ReadAllLines(inputFile);
-            return (T)Activator.CreateInstance(typeof(T), new object[] { inputText });
-        }
+    private T ParseInputFile()
+    {
+        var inputFile = Path.Combine($"{_inputDirectory}", $"{_dayName}.txt");
+        var inputText = File.ReadAllLines(inputFile);
+        return (T)Activator.CreateInstance(typeof(T), new object[] { inputText });
     }
 }
