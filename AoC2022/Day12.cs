@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Drawing;
-using AoC.AoC2022.Common;
+﻿using System.Drawing;
 
 namespace AoC.AoC2022
 {

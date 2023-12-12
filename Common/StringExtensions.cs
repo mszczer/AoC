@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace AoC.AoC2022.Common
+﻿namespace AoC.Common
 {
     public static class StringExtensions
     {

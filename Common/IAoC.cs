@@ -1,4 +1,4 @@
-﻿namespace AoC.AoC2022.Common
+﻿namespace AoC.Common
 {
     public interface IAoC<out TPart1, out TPart2>
     {

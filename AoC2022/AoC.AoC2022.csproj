@@ -63,4 +63,8 @@
 	  </None>
 	</ItemGroup>
 
+	<ItemGroup>
+	  <ProjectReference Include="..\Common\AoC.Common.csproj" />
+	</ItemGroup>
+
 </Project>

@@ -1,7 +1,4 @@
-﻿using System;
-using System.IO;
-
-namespace AoC.AoC2022.Common;
+﻿namespace AoC.Common;
 
 public abstract class AoC<T, TResult1, TResult2> : IAoC<TResult1, TResult2> where T : new()
 {
@@ -30,7 +27,7 @@ public abstract class AoC<T, TResult1, TResult2> : IAoC<TResult1, TResult2> wher
         Console.WriteLine($"{_dayName} part2 answer: {CalculatePart2()}");
     }
 
-    private T ParseInputFile()
+    private T? ParseInputFile()
     {
         var inputFile = Path.Combine($"{_inputDirectory}", $"{_dayName}.txt");
         var inputText = File.ReadAllLines(inputFile);

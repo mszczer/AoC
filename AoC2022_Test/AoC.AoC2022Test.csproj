@@ -22,6 +22,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\AoC2022\AoC.AoC2022.csproj" />
+    <ProjectReference Include="..\Common\AoC.Common.csproj" />
   </ItemGroup>
 
   <ItemGroup>

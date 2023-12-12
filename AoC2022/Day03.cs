@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using AoC.AoC2022.Common;
-
-namespace AoC.AoC2022
+﻿namespace AoC.AoC2022
 {
     internal class Day03 : AoC<List<string>, int, int>
     {
