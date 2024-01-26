@@ -1,7 +1,7 @@
 ﻿using AoC.AoC2022;
 using NUnit.Framework;
 
-namespace AoC.AoC2022Test
+namespace AoC.AoC2022_Tests
 {
     [TestFixture]
     [Parallelizable(ParallelScope.All)]
