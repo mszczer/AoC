@@ -1,2 +1,5 @@
-﻿// See https://aka.ms/new-console-template for more information
-Console.WriteLine("Hello, World!");
+﻿using AoC.AoC2023;
+
+new Day01("Day01").PrintResults();
+
+Console.ReadKey();
