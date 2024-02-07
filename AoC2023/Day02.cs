@@ -68,7 +68,8 @@ internal class Day02 : AoC<List<string>, int, int>
 
     public override int CalculatePart2()
     {
-        return -1;
+        return _gameRecords.Sum(game => 
+            (game.Value.Blue * game.Value.Green * game.Value.Red));
     }
 
     private struct Draw
