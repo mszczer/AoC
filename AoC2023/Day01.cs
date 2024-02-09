@@ -2,12 +2,8 @@
 
 namespace AoC.AoC2023;
 
-internal class Day01 : AoC<List<string>, int, int>
+internal class Day01(string dayName) : AoC<List<string>, int, int>(dayName)
 {
-    public Day01(string dayName) : base(dayName)
-    {
-    }
-
     public override int CalculatePart1()
     {
         return CalculateCalibrationFromDigits(InputData);
@@ -35,7 +31,7 @@ internal class Day01 : AoC<List<string>, int, int>
         return CalculateCalibrationFromDigitsAndWords(InputData);
     }
 
-    private int CalculateCalibrationFromDigitsAndWords(IEnumerable<string> calibrationDocument)
+    private static int CalculateCalibrationFromDigitsAndWords(IEnumerable<string> calibrationDocument)
     {
         var wordToDigitMapping = InitializeWordToDigitMapping();
 
