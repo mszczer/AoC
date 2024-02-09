@@ -1,4 +1,5 @@
 ﻿using System.Drawing;
+using System.Text;
 using AoC.Common;
 
 namespace AoC.AoC2023;
@@ -18,7 +19,7 @@ internal class Day03 : AoC<List<string>, int, int>
         _partNumbers = new List<Tuple<int, List<Point>>>();
         _symbols = new List<Tuple<char, Point>>();
 
-        var number = "";
+        StringBuilder number = new StringBuilder();
         var coordinates = new List<Point>();
 
         for (var row = 0; row < InputData.Count; row++)
@@ -29,12 +30,12 @@ internal class Day03 : AoC<List<string>, int, int>
 
                 if (!char.IsDigit(currentChar))
                 {
-                    if (!string.IsNullOrEmpty(number)) // Save number and its coordinates
+                    if (number.Length > 0) // Save number and its coordinates
                     {
-                        var partnumber = int.Parse(number);
+                        var partnumber = int.Parse(number.ToString());
                         _partNumbers.Add(new Tuple<int, List<Point>>(partnumber, new List<Point>(coordinates)));
 
-                        number = "";
+                        number.Clear();
                         coordinates.Clear();
                     }
 
@@ -43,7 +44,7 @@ internal class Day03 : AoC<List<string>, int, int>
                 }
                 else // Convert digit characters to number string
                 {
-                    number += currentChar;
+                    number.Append(currentChar);
                     coordinates.Add(currentPosition);
                 }
             }
