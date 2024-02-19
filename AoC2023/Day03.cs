@@ -82,12 +82,8 @@ internal class Day03 : AoC<List<string>, int, int>
                 var gearParts = new List<int>();
 
                 foreach (var part in _partNumbers)
-                    if (IsAdjacent(symbol, part))
-                    {
+                    if (gearParts.Count <=3 && IsAdjacent(symbol, part))
                         gearParts.Add(part.Item1);
-                        if (gearParts.Count > 2)
-                            continue;
-                    }
 
                 if (gearParts.Count == 2)
                     result += gearParts[0] * gearParts[1];
