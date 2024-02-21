@@ -18,19 +18,15 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="InputData\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\AoC2023\AoC.AoC2023.csproj" />
     <ProjectReference Include="..\Common\AoC.Common.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="InputData\Test_Day01 - Part2.txt">
+    <None Update="InputData\Test_Day01-2.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="InputData\Test_Day01.txt">
+    <None Update="InputData\Test_Day01-1.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="InputData\Test_Day02.txt">

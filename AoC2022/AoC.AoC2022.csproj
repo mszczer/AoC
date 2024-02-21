@@ -11,7 +11,7 @@
 		<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="8.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0" />
     <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
-			<_Parameter1>AoC.AoC2022_Tests</_Parameter1>
+			<_Parameter1>AoC.AoC2022.Tests</_Parameter1>
 		</AssemblyAttribute>
 	</ItemGroup>
 

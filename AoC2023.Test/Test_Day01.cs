@@ -1,14 +1,13 @@
 ﻿using AoC.AoC2023;
-using NUnit.Framework;
 
-namespace AoC.AoC2023_Tests
+namespace AoC.AoC2023.Tests
 {
     [TestFixture]
     [Parallelizable(ParallelScope.All)]
-    public class TestDay01
+    public class Test_Day01
     {
-        private const string TestDayNumber = "Test_Day01";
-        private const string TestDayNumber_Part2 = "Test_Day01 - Part2";
+        private const string TestDayNumber = "Test_Day01-1";
+        private const string TestDayNumber_Part2 = "Test_Day01-2";
         private Day01 _day;
         private Day01 _day_Part2;
 

@@ -1,10 +1,10 @@
 ﻿using AoC.AoC2023;
 
-namespace AoC.AoC2023_Tests;
+namespace AoC.AoC2023.Tests;
 
 [TestFixture]
 [Parallelizable(ParallelScope.All)]
-public class TestDay02
+public class Test_Day02
 {
     private const string TestDayNumber = "Test_Day02";
     private Day02 _day;

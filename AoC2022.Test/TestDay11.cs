@@ -1,7 +1,7 @@
 ﻿using AoC.AoC2022;
 using NUnit.Framework;
 
-namespace AoC.AoC2022_Tests
+namespace AoC.AoC2022.Tests
 {
     [TestFixture]
     public class TestDay11
