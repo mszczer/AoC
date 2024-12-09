@@ -1,5 +1,7 @@
-﻿Console.WriteLine("https://adventofcode.com/2024");
+﻿using AoC.AoC2024;
 
-//new Day01("Day01").PrintResults();
+Console.WriteLine("https://adventofcode.com/2024");
+
+new Day01("Day01").PrintResults();
 
 Console.ReadKey();

@@ -18,7 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\AoC2024\AoC2024.csproj" />
+    <ProjectReference Include="..\AoC2024\AoC.AoC2024.csproj" />
     <ProjectReference Include="..\Common\AoC.Common.csproj" />
   </ItemGroup>
 
@@ -28,6 +28,12 @@
 
   <ItemGroup>
     <Folder Include="InputData\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="InputData\Test_Day01.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>
