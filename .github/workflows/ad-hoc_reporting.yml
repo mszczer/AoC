@@ -30,7 +30,7 @@ jobs:
         --logger "trx;LogFileName=test-results.trx"    
   
     - name: Publish test report
-      uses: dorny/test-reporter@v1
+      uses: dorny/test-reporter@v1.9.1
       if: always()
       with:
         name: Unit Tests
