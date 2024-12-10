@@ -26,5 +26,4 @@ public class Test_Day01
     {
         Assert.That(_day.CalculatePart2(), Is.EqualTo(31));
     }
-
 }

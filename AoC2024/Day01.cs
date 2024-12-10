@@ -12,12 +12,6 @@ public class Day01 : AoC<List<string>, int, int>
         ParseLocations();
     }
 
-    public Day01(string dayName, List<string> inputData) : base(dayName)
-    {
-        InputData = inputData;
-        ParseLocations();
-    }
-
     private void ParseLocations()
     {
         foreach (var locationPair in InputData)
