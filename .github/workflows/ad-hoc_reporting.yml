@@ -12,9 +12,7 @@ jobs:
       uses: actions/checkout@v3
 
     - name: Setup .NET Core
-      uses: actions/setup-dotnet@v3
-      with:
-        dotnet-version: 7.0.x
+      uses: actions/setup-dotnet@v4.1.0
     
     - name: Restore dependencies
       run: dotnet restore
@@ -30,7 +28,7 @@ jobs:
         --logger "trx;LogFileName=test-results.trx"    
   
     - name: Publish test report
-      uses: dorny/test-reporter@v1
+      uses: dorny/test-reporter@v1.9.1
       if: always()
       with:
         name: Unit Tests
@@ -38,6 +36,6 @@ jobs:
         reporter: dotnet-trx
 
     - name: Upload Codecov coverage report
-      uses: codecov/codecov-action@v3
+      uses: codecov/codecov-action@v5.1.1
       env:
         CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
