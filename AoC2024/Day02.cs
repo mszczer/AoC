@@ -38,7 +38,7 @@ internal class Day02 : AoC<List<string>, int, int>
 
         return safeReportsNum;
     }
-
+    
     public override int CalculatePart2()
     {
         var safeReportsNum = 0;
@@ -76,11 +76,14 @@ internal class Day02 : AoC<List<string>, int, int>
         return true;
     }
 
-    private bool IsReportSafeWithSingleBadTolerance(IReadOnlyCollection<int> report)
+    private static bool IsReportSafeWithSingleBadTolerance(IReadOnlyList<int> report)
     {
         for (var i = 0; i < report.Count; i++)
         {
-            var tempReport = report.Where((t, level) => level != i).ToList();
+            var tempReport = new List<int>();
+
+            for (var level = 0; level < report.Count; level++)
+                if(level != i) tempReport.Add(report[level]);
 
             if (IsReportSafe(tempReport))
                 return true;
