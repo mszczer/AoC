@@ -24,6 +24,6 @@ public class Test_Day02
     [Test]
     public void Day02_Part2_EndToEnd()
     {
-        Assert.That(_day.CalculatePart2(), Is.EqualTo(31));
+        Assert.That(_day.CalculatePart2(), Is.EqualTo(4));
     }
 }

@@ -1,4 +1,5 @@
-﻿using AoC.Common;
+﻿using System.Net.Security;
+using AoC.Common;
 
 namespace AoC.AoC2024;
 
@@ -38,7 +39,20 @@ internal class Day02 : AoC<List<string>, int, int>
         return safeReportsNum;
     }
 
-    private bool IsReportSafe(List<int> report)
+    public override int CalculatePart2()
+    {
+        var safeReportsNum = 0;
+
+        foreach (var report in _reports)
+            if (IsReportSafe(report))
+                safeReportsNum++;
+            else if (IsReportSafeWithSingleBadTolerance(report))
+                safeReportsNum++;
+
+        return safeReportsNum;
+    }
+
+    private static bool IsReportSafe(IReadOnlyList<int> report)
     {
         if (report.Count <= 1) return true;                 // single element lists are considered consistent
 
@@ -48,22 +62,30 @@ internal class Day02 : AoC<List<string>, int, int>
         {
             if (report[i] == report[i - 1]) return false;   // neither increasing nor decreasing
             if (Math.Abs(report[i] - report[i - 1]) > 3)    // levels differ by at least one and at most three
-                return false; 
+                return false;
 
             if (isIncreasing == null)
                 isIncreasing = report[i] > report[i - 1];
 
             // either gradually increasing and gradually decreasing
-            else if ((isIncreasing == true && report[i] < report[i - 1]) || 
-                     (isIncreasing == false && report[i] > report[i - 1]) 
+            else if ((isIncreasing == true && report[i] < report[i - 1]) ||
+                     (isIncreasing == false && report[i] > report[i - 1])
                     ) return false;
         }
 
         return true;
     }
 
-    public override int CalculatePart2()
+    private bool IsReportSafeWithSingleBadTolerance(IReadOnlyCollection<int> report)
     {
-        throw new NotImplementedException();
+        for (var i = 0; i < report.Count; i++)
+        {
+            var tempReport = report.Where((t, level) => level != i).ToList();
+
+            if (IsReportSafe(tempReport))
+                return true;
+        }
+
+        return false;
     }
 }
