@@ -5,26 +5,27 @@ namespace AoC.AoC2024;
 
 public class Day03 : AoC<List<string>, int, int>
 {
+    private const string InstructionPattern = @"do\(\)|don't\(\)|mul\((\d{1,3}),(\d{1,3})\)";
+    private const string NumberPattern = @"\d{1,3}";
     private List<string> _instructions;
 
     public Day03(string dayName, string inputDirectory) : base(dayName, inputDirectory)
     {
+        ParseInstructions();
     }
 
     public Day03(string dayName) : base(dayName)
     {
-        ParseMemoryDump();
+        ParseInstructions();
     }
 
-    private void ParseMemoryDump()
+    private void ParseInstructions()
     {
         _instructions = new List<string>();
 
-        const string pattern = @"do\(\)|don't\(\)|mul\((\d{1,3}),(\d{1,3})\)";
-
         foreach (var memoryDump in InputData)
         {
-            var matchingInstructions = Regex.Matches(memoryDump, pattern);
+            var matchingInstructions = Regex.Matches(memoryDump, InstructionPattern);
 
             foreach (Match match in matchingInstructions)
                 _instructions.Add(match.Value);
@@ -36,31 +37,33 @@ public class Day03 : AoC<List<string>, int, int>
         var mulResults = 0;
 
         foreach (var instruction in _instructions)
-            if (instruction != "do()" && instruction != "don't()")
+            if (!IsControlInstruction(instruction))
                 mulResults += ExecuteInstruction(instruction);
 
         return mulResults;
     }
 
+    private static bool IsControlInstruction(string instruction)
+    {
+        return instruction is "do()" or "don't()";
+    }
+
     private static int ExecuteInstruction(string instruction)
     {
-        const string pattern = @"\d{1,3}";
-
-        var numbers = Regex.Matches(instruction, pattern);
+        var numbers = Regex.Matches(instruction, NumberPattern);
 
         return int.Parse(numbers[0].Value) * int.Parse(numbers[1].Value);
     }
 
     public override int CalculatePart2()
     {
-        var enableFlag = true;
-
+        var isEnabled = true;
         var mulResults = 0;
 
         foreach (var instruction in _instructions)
-            if (instruction == "do()") enableFlag = true;
-            else if (instruction == "don't()") enableFlag = false;
-            else if (enableFlag)
+            if (instruction == "do()") isEnabled = true;
+            else if (instruction == "don't()") isEnabled = false;
+            else if (isEnabled)
                 mulResults += ExecuteInstruction(instruction);
 
         return mulResults;
