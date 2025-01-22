@@ -127,6 +127,39 @@ internal class Day04 : AoC<List<string>, int, int>
 
     public override int CalculatePart2()
     {
-        return int.MinValue;
+        var occurrences = 0;
+
+        var rows = _searchSheet.GetLength(0);
+        var columns = _searchSheet.GetLength(1);
+
+        for (var row = 1; row < rows - 1; row++)
+            for (var column = 1; column < columns - 1; column++)
+                if (_searchSheet[row, column] == 'A')
+                {
+                    var topLeftToBottomRight = ExtractDiagonal(row, column, -1, -1, 1, 1);
+                    var bottomLeftToTopRight = ExtractDiagonal(row, column, 1, -1, -1, 1);
+
+                    if (ContainsPattern(topLeftToBottomRight, "MAS|SAM") && ContainsPattern(bottomLeftToTopRight, "MAS|SAM"))
+                        occurrences++;
+                }
+
+        return occurrences;
+    }
+
+    private string ExtractDiagonal(int centerRow, int centerColumn, int startRowOffset, int startColOffset,
+        int endRowOffset, int endColOffset)
+    {
+        var sentence = new StringBuilder();
+
+        sentence.Append(_searchSheet[centerRow + startRowOffset, centerColumn + startColOffset]);
+        sentence.Append(_searchSheet[centerRow, centerColumn]);
+        sentence.Append(_searchSheet[centerRow + endRowOffset, centerColumn + endColOffset]);
+
+        return sentence.ToString();
+    }
+
+    private static bool ContainsPattern(string sentence, string pattern)
+    {
+        return Regex.IsMatch(sentence, pattern);
     }
 }
