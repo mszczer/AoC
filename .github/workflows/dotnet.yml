@@ -32,7 +32,7 @@ jobs:
         --logger "trx;LogFileName=test-results.trx"  
   
     - name: Publish test report
-      uses: dorny/test-reporter@v1
+      uses: dorny/test-reporter@v1.9.1
       if: always()
       with:
         name: Unit Tests
@@ -40,7 +40,7 @@ jobs:
         reporter: dotnet-trx
 
     - name: Upload coverage report to Codacy
-      uses: codacy/codacy-coverage-reporter-action@v1
+      uses: codacy/codacy-coverage-reporter-action@v1.3.0
       if: always()
       with:
         project-token: ${{ secrets.CODACY_PROJECT_TOKEN }}
