@@ -1,5 +1,4 @@
 ﻿using AoC.AoC2024;
-using System.Text.RegularExpressions;
 
 Console.WriteLine("https://adventofcode.com/2024");
 

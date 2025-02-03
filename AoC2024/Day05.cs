@@ -62,9 +62,9 @@ public class Day05 : AoC<List<string>, int, int>
     private static bool IsCorrectOrder(IReadOnlyList<int> update, ICollection<(int, int)> pageOrderingRules)
     {
         for (var firstPage = 0; firstPage < update.Count - 1; firstPage++)
-            for (var secondPage = firstPage + 1; secondPage < update.Count; secondPage++)
-                if (!pageOrderingRules.Contains((update[firstPage], update[secondPage])))
-                    return false;
+        for (var secondPage = firstPage + 1; secondPage < update.Count; secondPage++)
+            if (!pageOrderingRules.Contains((update[firstPage], update[secondPage])))
+                return false;
 
         return true;
     }
@@ -75,11 +75,7 @@ public class Day05 : AoC<List<string>, int, int>
 
         foreach (var update in _updates)
             if (!IsCorrectOrder(update, _pageOrderingRules))
-            {
-                var updateSorted = SortUpdateToCorrectOrder(update, _pageOrderingRules);
-
-                correctedOrderingNumber += GetMiddlePageNumber(updateSorted);
-            }
+                correctedOrderingNumber += GetMiddlePageNumber(SortUpdateToCorrectOrder(update, _pageOrderingRules));
 
         return correctedOrderingNumber;
     }
@@ -92,20 +88,22 @@ public class Day05 : AoC<List<string>, int, int>
     private static IReadOnlyList<int> SortUpdateToCorrectOrder(IEnumerable<int> update,
         ICollection<(int, int)> pageOrderingRules)
     {
-        var updateSorted = update.ToList();
+        var sortedUpdate = update.ToList();
 
-        for (var firstPage = 0; firstPage < updateSorted.Count - 1; firstPage++)
-            for (var secondPage = firstPage + 1; secondPage < updateSorted.Count; secondPage++)
-                if (!pageOrderingRules.Contains((updateSorted[firstPage], updateSorted[secondPage])))
-                    if (pageOrderingRules.Contains((updateSorted[secondPage], updateSorted[firstPage])))
-                    {
-                        (updateSorted[firstPage], updateSorted[secondPage]) =
-                            (updateSorted[secondPage], updateSorted[firstPage]);
+        var swapped = false;
 
-                        firstPage = 0;
-                        secondPage = 0;
-                    }
+        do
+        {
+            swapped = false;
+            for (var i = 0; i < sortedUpdate.Count - 1; i++)
+                if (!pageOrderingRules.Contains((sortedUpdate[i], sortedUpdate[i + 1])) &&
+                    pageOrderingRules.Contains((sortedUpdate[i + 1], sortedUpdate[i])))
+                {
+                    (sortedUpdate[i], sortedUpdate[i + 1]) = (sortedUpdate[i + 1], sortedUpdate[i]);
+                    swapped = true;
+                }
+        } while (swapped);
 
-        return updateSorted;
+        return sortedUpdate;
     }
 }
