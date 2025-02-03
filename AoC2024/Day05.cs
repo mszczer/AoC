@@ -10,15 +10,15 @@ public class Day05 : AoC<List<string>, int, int>
 
     public Day05(string dayName, string inputDirectory) : base(dayName, inputDirectory)
     {
-        InitializeUpdatesData();
+        ParseInputData();
     }
 
     public Day05(string dayName) : base(dayName)
     {
-        InitializeUpdatesData();
+        ParseInputData();
     }
 
-    private void InitializeUpdatesData()
+    private void ParseInputData()
     {
         _pageOrderingRules = new List<(int, int)>();
         _updates = new List<List<int>>();
@@ -26,17 +26,15 @@ public class Day05 : AoC<List<string>, int, int>
         var pageOrderingSection = true;
 
         foreach (var line in InputData)
-            if (line == "")
+            if (string.IsNullOrWhiteSpace(line))
             {
                 pageOrderingSection = false;
             }
             else if (pageOrderingSection)
             {
                 var parts = line.Split('|');
-                var firstPage = int.Parse(parts[0]);
-                var secondPage = int.Parse(parts[1]);
 
-                _pageOrderingRules.Add((firstPage, secondPage));
+                _pageOrderingRules.Add((int.Parse(parts[0]), int.Parse(parts[1])));
             }
             else
             {
@@ -55,32 +53,59 @@ public class Day05 : AoC<List<string>, int, int>
         var pageOrderingNumber = 0;
 
         foreach (var update in _updates)
-            if (IsRightOrder(update, _pageOrderingRules))
-                pageOrderingNumber += getMiddlePageNumber(update);
+            if (IsCorrectOrder(update, _pageOrderingRules))
+                pageOrderingNumber += GetMiddlePageNumber(update);
 
         return pageOrderingNumber;
     }
 
-    private static bool IsRightOrder(IReadOnlyList<int> update, ICollection<(int, int)> pageOrderingRules)
+    private static bool IsCorrectOrder(IReadOnlyList<int> update, ICollection<(int, int)> pageOrderingRules)
     {
         for (var firstPage = 0; firstPage < update.Count - 1; firstPage++)
             for (var secondPage = firstPage + 1; secondPage < update.Count; secondPage++)
-                if (pageOrderingRules.Contains((update[firstPage], update[secondPage])))
-                    continue;
-                else
+                if (!pageOrderingRules.Contains((update[firstPage], update[secondPage])))
                     return false;
 
         return true;
     }
 
-    private static int getMiddlePageNumber(IReadOnlyList<int> update)
+    public override int CalculatePart2()
+    {
+        var correctedOrderingNumber = 0;
+
+        foreach (var update in _updates)
+            if (!IsCorrectOrder(update, _pageOrderingRules))
+            {
+                var updateSorted = SortUpdateToCorrectOrder(update, _pageOrderingRules);
+
+                correctedOrderingNumber += GetMiddlePageNumber(updateSorted);
+            }
+
+        return correctedOrderingNumber;
+    }
+
+    private static int GetMiddlePageNumber(IReadOnlyList<int> update)
     {
         return update[update.Count / 2];
     }
 
-
-    public override int CalculatePart2()
+    private static IReadOnlyList<int> SortUpdateToCorrectOrder(IEnumerable<int> update,
+        ICollection<(int, int)> pageOrderingRules)
     {
-        return int.MaxValue;
+        var updateSorted = update.ToList();
+
+        for (var firstPage = 0; firstPage < updateSorted.Count - 1; firstPage++)
+            for (var secondPage = firstPage + 1; secondPage < updateSorted.Count; secondPage++)
+                if (!pageOrderingRules.Contains((updateSorted[firstPage], updateSorted[secondPage])))
+                    if (pageOrderingRules.Contains((updateSorted[secondPage], updateSorted[firstPage])))
+                    {
+                        (updateSorted[firstPage], updateSorted[secondPage]) =
+                            (updateSorted[secondPage], updateSorted[firstPage]);
+
+                        firstPage = 0;
+                        secondPage = 0;
+                    }
+
+        return updateSorted;
     }
 }
