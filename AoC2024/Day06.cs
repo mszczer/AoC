@@ -1,12 +1,16 @@
-﻿using System.Drawing;
-using AoC.Common;
+﻿using AoC.Common;
 
 namespace AoC.AoC2024;
 
 public class Day06 : AoC<List<string>, int, int>
 {
     private char[,] _map;
-    private Point _startPosition;
+    private readonly struct Position(int row, int col)
+    { 
+        public int Row { get; } = row;
+        public int Col { get; } = col;
+    }
+    private Position _startPosition;
     private enum Direction { Up, Down, Left, Right }
     
     private static readonly Dictionary<Direction, (int dRow, int dCol)> Movement = new()
@@ -21,6 +25,7 @@ public class Day06 : AoC<List<string>, int, int>
     {
         SetMap();
     }
+
     private void SetMap()
     {
         var numberOfRows = InputData.Count;
@@ -29,27 +34,25 @@ public class Day06 : AoC<List<string>, int, int>
         _map = new char[numberOfRows, numberOfColumns];
 
         for (var row = 0; row < numberOfRows; row++)
-            for (var column = 0; column < numberOfColumns; column++)
+            for (var col = 0; col < numberOfColumns; col++)
             {
-                _map[row, column] = InputData[row][column];
-                if (_map[row, column] == '^') _startPosition = new Point(row, column);
-        }
+                _map[row, col] = InputData[row][col];
+                if (_map[row, col] == '^') _startPosition = new Position(row, col);
+            }
     }
 
-    private void MarkPath()
+    private void MarkPath(char[,] map)
     {
-        var numberOfRows = _map.GetLength(0);
-        var numberOfColumns = _map.GetLength(1);
+        var numberOfRows = map.GetLength(0);
+        var numberOfColumns = map.GetLength(1);
 
-        var row = _startPosition.X;
-        var col = _startPosition.Y;
+        var row = _startPosition.Row;
+        var col = _startPosition.Col;
         var direction = Direction.Up;
-
-
-
+        
         while (row >= 0 && row < numberOfRows && col >= 0 && col < numberOfColumns)
         {
-            _map[row, col] = 'X';
+            map[row, col] = 'X';
 
             var (dRow, dCol) = Movement[direction];
             var nextRow = row + dRow;
@@ -58,16 +61,9 @@ public class Day06 : AoC<List<string>, int, int>
             if (nextRow < 0 || nextRow >= numberOfRows || nextCol < 0 || nextCol >= numberOfColumns)
                 break;
 
-            if (_map[nextRow, nextCol] == '#')
+            if (map[nextRow, nextCol] == '#')
             {
-                direction = direction switch
-                {
-                    Direction.Up => Direction.Right,
-                    Direction.Right => Direction.Down,
-                    Direction.Down => Direction.Left,
-                    Direction.Left => Direction.Up,
-                    _ => direction
-                };
+                direction = RotateClockwise(direction);
             }
             else
             {
@@ -77,16 +73,41 @@ public class Day06 : AoC<List<string>, int, int>
         }
     }
 
+    private static char[,] CloneMap(char[,] map)
+    {
+        var rows = map.GetLength(0);
+        var cols = map.GetLength(1);
+        var newMap = new char[rows, cols];
+        for (var i = 0; i < rows; i++)
+            for (var j = 0; j < cols; j++)
+                newMap[i, j] = map[i, j];
+        return newMap;
+    }
+
+    private static Direction RotateClockwise(Direction direction)
+    {
+        return direction switch
+        {
+            Direction.Up => Direction.Right,
+            Direction.Right => Direction.Down,
+            Direction.Down => Direction.Left,
+            Direction.Left => Direction.Up,
+            _ => direction
+        };
+    }
+
     public override int CalculatePart1()
     {
-        MarkPath();
+        var mapWithPath =  CloneMap(_map);
+
+        MarkPath(mapWithPath);
         var distinctPositions = 0;
-        var numberOfRows = _map.GetLength(0);
-        var numberOfColumns = _map.GetLength(1);
+        var numberOfRows = mapWithPath.GetLength(0);
+        var numberOfColumns = mapWithPath.GetLength(1);
 
         for (var i = 0; i < numberOfRows; i++)
             for (var j = 0; j < numberOfColumns; j++)
-                if (_map[i, j] == 'X')
+                if (mapWithPath[i, j] == 'X')
                     distinctPositions++;
 
         return distinctPositions;
