@@ -115,8 +115,71 @@ public class Day06 : AoC<List<string>, int, int>
 
     public override int CalculatePart2()
     {
-        throw new NotImplementedException();
+        var numberOfRows = _map.GetLength(0);
+        var numberOfColumns = _map.GetLength(1);
+
+        var row = _startPosition.Row;
+        var col = _startPosition.Col;
+        var direction = Direction.Up;
+        
+        var loopPositions = 0;
+
+        while (row >= 0 && row < numberOfRows && col >= 0 && col < numberOfColumns)
+        {
+            var (dRow, dCol) = Movement[direction];
+            var nextRow = row + dRow;
+            var nextCol = col + dCol;
+
+            if (nextRow < 0 || nextRow >= numberOfRows || nextCol < 0 || nextCol >= numberOfColumns)
+                break;
+            if (_map[nextRow, nextCol] == '#')
+            {
+                direction = RotateClockwise(direction);
+            }
+            else
+            {
+                var mapCopy = CloneMap(_map);
+                mapCopy[nextRow, nextCol] = '#';
+                if (CanReturnToStart(mapCopy, new Position(row, col), direction))
+                        loopPositions++;
+                row = nextRow;
+                col = nextCol;
+            }
+        }
+
+        return loopPositions;
     }
 
-    
+    private bool CanReturnToStart(char[,] mapCopy, Position position, Direction direction)
+    {
+        var numberOfRows = mapCopy.GetLength(0);
+        var numberOfColumns = mapCopy.GetLength(1);
+
+        var row = position.Row;
+        var col = position.Col;
+        direction = RotateClockwise(direction);
+
+        while (row >= 0 && row < numberOfRows && col >= 0 && col < numberOfColumns)
+        {
+            var (dRow, dCol) = Movement[direction];
+            var nextRow = row + dRow;
+            var nextCol = col + dCol;
+
+            if (nextRow < 0 || nextRow >= numberOfRows || nextCol < 0 || nextCol >= numberOfColumns)
+                return false;
+            if (mapCopy[nextRow, nextCol] == '#')
+            {
+                direction = RotateClockwise(direction);
+            }
+            else
+            {
+                if (nextRow == position.Row && nextCol == position.Col)
+                        return true;
+                row = nextRow;
+                col = nextCol;
+            }
+        }
+
+        return false;
+    }
 }
