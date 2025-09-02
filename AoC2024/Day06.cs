@@ -118,14 +118,18 @@ public class Day06 : AoC<List<string>, int, int>
         var numberOfRows = _map.GetLength(0);
         var numberOfColumns = _map.GetLength(1);
 
+        // First, trace the path to collect all positions visited
+        var pathPositions = new List<Position>();
         var row = _startPosition.Row;
         var col = _startPosition.Col;
         var direction = Direction.Up;
-        
-        var loopPositions = 0;
 
         while (row >= 0 && row < numberOfRows && col >= 0 && col < numberOfColumns)
         {
+            var pos = new Position(row, col);
+            if (!pathPositions.Contains(pos))
+                pathPositions.Add(pos);
+
             var (dRow, dCol) = Movement[direction];
             var nextRow = row + dRow;
             var nextCol = col + dCol;
@@ -138,29 +142,43 @@ public class Day06 : AoC<List<string>, int, int>
             }
             else
             {
-                var mapCopy = CloneMap(_map);
-                mapCopy[nextRow, nextCol] = '#';
-                if (CanReturnToStart(mapCopy, new Position(row, col), direction))
-                        loopPositions++;
                 row = nextRow;
                 col = nextCol;
             }
         }
 
-        return loopPositions;
+        int infiniteLoopPositions = 0;
+
+        // For each position on the path, block it and simulate from the original start
+        foreach (var posToBlock in pathPositions)
+        {
+            var mapCopy = CloneMap(_map);
+            mapCopy[posToBlock.Row, posToBlock.Col] = '#';
+
+            if (CausesInfiniteLoop(mapCopy, _startPosition, Direction.Up))
+                infiniteLoopPositions++;
+        }
+
+        return infiniteLoopPositions;
     }
 
-    private bool CanReturnToStart(char[,] mapCopy, Position position, Direction direction)
+    private bool CausesInfiniteLoop(char[,] mapCopy, Position startPosition, Direction startDirection)
     {
         var numberOfRows = mapCopy.GetLength(0);
         var numberOfColumns = mapCopy.GetLength(1);
 
-        var row = position.Row;
-        var col = position.Col;
-        direction = RotateClockwise(direction);
+        var row = startPosition.Row;
+        var col = startPosition.Col;
+        var direction = startDirection;
+
+        var visited = new HashSet<(int, int, Direction)>();
 
         while (row >= 0 && row < numberOfRows && col >= 0 && col < numberOfColumns)
         {
+            // If we've already visited this state, we are in a loop
+            if (!visited.Add((row, col, direction)))
+                return true;
+
             var (dRow, dCol) = Movement[direction];
             var nextRow = row + dRow;
             var nextCol = col + dCol;
@@ -173,8 +191,6 @@ public class Day06 : AoC<List<string>, int, int>
             }
             else
             {
-                if (nextRow == position.Row && nextCol == position.Col)
-                        return true;
                 row = nextRow;
                 col = nextCol;
             }
