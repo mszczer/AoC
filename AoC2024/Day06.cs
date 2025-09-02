@@ -5,10 +5,14 @@ namespace AoC.AoC2024;
 public class Day06 : AoC<List<string>, int, int>
 {
     private char[,] _map;
-    private readonly struct Position(int row, int col)
+    private readonly struct Position(int row, int col) : IEquatable<Position>
     { 
         public int Row { get; } = row;
         public int Col { get; } = col;
+
+        public bool Equals(Position other) => Row == other.Row && Col == other.Col;
+        public override bool Equals(object? obj) => obj is Position other && Equals(other);
+        public override int GetHashCode() => HashCode.Combine(Row, Col);
     }
     private Position _startPosition;
     private enum Direction { Up, Down, Left, Right }
@@ -118,8 +122,7 @@ public class Day06 : AoC<List<string>, int, int>
         var numberOfRows = _map.GetLength(0);
         var numberOfColumns = _map.GetLength(1);
 
-        // First, trace the path to collect all positions visited
-        var pathPositions = new List<Position>();
+        var pathPositions = new HashSet<Position>();
         var row = _startPosition.Row;
         var col = _startPosition.Col;
         var direction = Direction.Up;
@@ -127,8 +130,7 @@ public class Day06 : AoC<List<string>, int, int>
         while (row >= 0 && row < numberOfRows && col >= 0 && col < numberOfColumns)
         {
             var pos = new Position(row, col);
-            if (!pathPositions.Contains(pos))
-                pathPositions.Add(pos);
+            if (pathPositions.Add(pos)) { /* added new position */ }
 
             var (dRow, dCol) = Movement[direction];
             var nextRow = row + dRow;
@@ -148,21 +150,23 @@ public class Day06 : AoC<List<string>, int, int>
         }
 
         int infiniteLoopPositions = 0;
+        var mapCopy = CloneMap(_map);
 
-        // For each position on the path, block it and simulate from the original start
         foreach (var posToBlock in pathPositions)
         {
-            var mapCopy = CloneMap(_map);
+            var original = mapCopy[posToBlock.Row, posToBlock.Col];
             mapCopy[posToBlock.Row, posToBlock.Col] = '#';
 
             if (CausesInfiniteLoop(mapCopy, _startPosition, Direction.Up))
                 infiniteLoopPositions++;
+
+            mapCopy[posToBlock.Row, posToBlock.Col] = original; // Restore
         }
 
         return infiniteLoopPositions;
     }
 
-    private bool CausesInfiniteLoop(char[,] mapCopy, Position startPosition, Direction startDirection)
+    private static bool CausesInfiniteLoop(char[,] mapCopy, Position startPosition, Direction startDirection)
     {
         var numberOfRows = mapCopy.GetLength(0);
         var numberOfColumns = mapCopy.GetLength(1);
