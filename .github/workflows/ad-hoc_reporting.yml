@@ -3,16 +3,16 @@ name: Repository metrics
 on: workflow_dispatch
 
 jobs:
-  build-test-metrics:
+  build-and-test:
 
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     
     steps:
     - name: Checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Setup .NET Core
-      uses: actions/setup-dotnet@v4.1.0
+      uses: actions/setup-dotnet@v4
     
     - name: Restore dependencies
       run: dotnet restore
@@ -25,8 +25,8 @@ jobs:
         --no-build 
         --verbosity normal 
         --collect:"XPlat Code Coverage" 
-        --logger "trx;LogFileName=test-results.trx"    
-  
+        --logger "trx;LogFileName=test-results.trx"  
+    
     - name: Publish test report
       uses: dorny/test-reporter@v1.9.1
       if: always()
@@ -34,8 +34,8 @@ jobs:
         name: Unit Tests
         path: "**/test-results.trx"                             
         reporter: dotnet-trx
-
+      
     - name: Upload Codecov coverage report
-      uses: codecov/codecov-action@v5.1.1
+      uses: codecov/codecov-action@v5.5.1
       env:
         CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
