@@ -38,9 +38,6 @@ jobs:
         name: Unit Tests
         path: "**/test-results.trx"                             
         reporter: dotnet-trx
-
-    - name: Basic Test Results
-      uses: codecov/basic-test-results@v1
       
     - name: Upload Codecov coverage report
       uses: codecov/codecov-action@v5.5.1
