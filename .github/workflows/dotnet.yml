@@ -30,7 +30,7 @@ jobs:
         --verbosity normal 
         --collect:"XPlat Code Coverage" 
         --logger "trx;LogFileName=test-results.trx"  
-  
+    
     - name: Publish test report
       uses: dorny/test-reporter@v1.9.1
       if: always()
@@ -39,8 +39,16 @@ jobs:
         path: "**/test-results.trx"                             
         reporter: dotnet-trx
 
-    # - name: Upload coverage report to Codacy
-    #   uses: codacy/codacy-coverage-reporter-action@v1.3.0
+    - name: Basic Test Results
+      uses: codecov/basic-test-results@v1
+      
+    - name: Upload Codecov coverage report
+      uses: codecov/codecov-action@v5.5.1
+      env:
+        CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+
+    - name: Upload coverage report to Codacy
+      uses: codacy/codacy-coverage-reporter-action@v1.3.0
     #   if: always()
     #   with:
     #     project-token: ${{ secrets.CODACY_PROJECT_TOKEN }}
