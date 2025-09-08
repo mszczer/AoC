@@ -17,6 +17,12 @@ public abstract class AoC<T, TResult1, TResult2> : IAoC<TResult1, TResult2> wher
     protected AoC(string dayName) : this(dayName, "InputData")
     {
     }
+    protected AoC(string dayName, T inputData)
+    {
+        _dayName = dayName;
+        _inputDirectory = string.Empty;
+        InputData = inputData;
+    }
 
     public abstract TResult1 CalculatePart1();
     public abstract TResult2 CalculatePart2();
