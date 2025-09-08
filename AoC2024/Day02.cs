@@ -1,6 +1,4 @@
-﻿using AoC.Common;
-
-namespace AoC.AoC2024;
+﻿namespace AoC.AoC2024;
 
 internal class Day02 : AoC<List<string>, int, int>
 {

@@ -1,31 +1,30 @@
-﻿using System.Text.RegularExpressions;
-using AoC.Common;
-
-namespace AoC.AoC2024;
+﻿namespace AoC.AoC2024;
 
 public class Day03 : AoC<List<string>, int, int>
 {
-    private const string InstructionPattern = @"do\(\)|don't\(\)|mul\((\d{1,3}),(\d{1,3})\)";
-    private const string NumberPattern = @"\d{1,3}";
-    private List<string> _instructions;
+    private static readonly Regex InstructionRegex =
+        new(@"do\(\)|don't\(\)|mul\((\d{1,3}),(\d{1,3})\)", RegexOptions.Compiled);
 
-    public Day03(string dayName, string inputDirectory) : base(dayName, inputDirectory)
-    {
-        ParseInstructions();
-    }
+    private static readonly Regex NumberRegex = new(@"\d{1,3}", RegexOptions.Compiled);
+    private List<string> _instructions;
 
     public Day03(string dayName) : base(dayName)
     {
         ParseInstructions();
     }
 
+    public Day03(string dayName, List<string> inputData) : base(dayName, inputData)
+    {
+        ParseInstructions();
+    }
+
     private void ParseInstructions()
     {
-        _instructions = new List<string>();
+        _instructions = [];
 
         foreach (var memoryDump in InputData)
         {
-            var matchingInstructions = Regex.Matches(memoryDump, InstructionPattern);
+            var matchingInstructions = InstructionRegex.Matches(memoryDump);
 
             foreach (Match match in matchingInstructions)
                 _instructions.Add(match.Value);
@@ -50,7 +49,9 @@ public class Day03 : AoC<List<string>, int, int>
 
     private static int ExecuteInstruction(string instruction)
     {
-        var numbers = Regex.Matches(instruction, NumberPattern);
+        var numbers = NumberRegex.Matches(instruction);
+        if (numbers.Count != 2)
+            throw new FormatException($"Instruction '{instruction}' does not contain two numbers.");
 
         return int.Parse(numbers[0].Value) * int.Parse(numbers[1].Value);
     }
