@@ -2,7 +2,7 @@
 
 public class Day05 : AoC<List<string>, int, int>
 {
-    private List<(int, int)> _pageOrderingRules;
+    private HashSet<(int, int)> _pageOrderingRules;
     private List<List<int>> _updates;
 
 
@@ -16,10 +16,15 @@ public class Day05 : AoC<List<string>, int, int>
         ParseInputData();
     }
 
+    public Day05(string dayName, List<string> inputData) : base(dayName, inputData)
+    {
+        ParseInputData();
+    }
+
     private void ParseInputData()
     {
-        _pageOrderingRules = new List<(int, int)>();
-        _updates = new List<List<int>>();
+        _pageOrderingRules = [];
+        _updates = [];
 
         var pageOrderingSection = true;
 
@@ -31,18 +36,18 @@ public class Day05 : AoC<List<string>, int, int>
             else if (pageOrderingSection)
             {
                 var parts = line.Split('|');
-
-                _pageOrderingRules.Add((int.Parse(parts[0]), int.Parse(parts[1])));
+                if (parts.Length == 2 && int.TryParse(parts[0], out var first) &&
+                    int.TryParse(parts[1], out var second)) _pageOrderingRules.Add((first, second));
             }
             else
             {
                 var parts = line.Split(',');
                 var pageNumbers = new List<int>();
-
                 foreach (var part in parts)
-                    pageNumbers.Add(int.Parse(part));
-
-                _updates.Add(pageNumbers);
+                    if (int.TryParse(part, out var num))
+                        pageNumbers.Add(num);
+                if (pageNumbers.Count > 0)
+                    _updates.Add(pageNumbers);
             }
     }
 
@@ -57,12 +62,12 @@ public class Day05 : AoC<List<string>, int, int>
         return pageOrderingNumber;
     }
 
-    private static bool IsCorrectOrder(IReadOnlyList<int> update, ICollection<(int, int)> pageOrderingRules)
+    private static bool IsCorrectOrder(IReadOnlyList<int> update, HashSet<(int, int)> pageOrderingRules)
     {
         for (var firstPage = 0; firstPage < update.Count - 1; firstPage++)
-        for (var secondPage = firstPage + 1; secondPage < update.Count; secondPage++)
-            if (!pageOrderingRules.Contains((update[firstPage], update[secondPage])))
-                return false;
+            for (var secondPage = firstPage + 1; secondPage < update.Count; secondPage++)
+                if (!pageOrderingRules.Contains((update[firstPage], update[secondPage])))
+                    return false;
 
         return true;
     }
@@ -84,10 +89,9 @@ public class Day05 : AoC<List<string>, int, int>
     }
 
     private static IReadOnlyList<int> SortUpdateToCorrectOrder(IEnumerable<int> update,
-        ICollection<(int, int)> pageOrderingRules)
+        HashSet<(int, int)> pageOrderingRules)
     {
         var sortedUpdate = update.ToList();
-
         var swapped = false;
 
         do
