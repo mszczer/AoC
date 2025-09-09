@@ -6,6 +6,8 @@ internal class Day04 : AoC<List<string>, int, int>
 {
     private char[,] _searchSheet;
     private List<string> _searchSentences;
+    private static readonly Regex Part1Regex = new("(?=(XMAS|SAMX))", RegexOptions.Compiled);
+    private static readonly Regex Part2Regex = new("MAS|SAM", RegexOptions.Compiled);
 
     public Day04(string dayName, string inputDirectory) : base(dayName, inputDirectory)
     {
@@ -13,6 +15,11 @@ internal class Day04 : AoC<List<string>, int, int>
     }
 
     public Day04(string dayName) : base(dayName)
+    {
+        InitializeSearchData();
+    }
+
+    public Day04(string dayName, List<string> inputData) : base(dayName, inputData)
     {
         InitializeSearchData();
     }
@@ -25,6 +32,9 @@ internal class Day04 : AoC<List<string>, int, int>
 
     private void InitializeSearchSheet()
     {
+        if (InputData == null || InputData.Count == 0 || InputData[0].Length == 0)
+            throw new InvalidOperationException("InputData is empty or not initialized.");
+
         var rows = InputData.Count;
         var columns = InputData[0].Length;
 
@@ -37,7 +47,7 @@ internal class Day04 : AoC<List<string>, int, int>
 
     private void GenerateSearchSentences()
     {
-        _searchSentences = new List<string>();
+        _searchSentences = [];
 
         AddRowSentences();
         AddColumnSentences();
@@ -52,7 +62,7 @@ internal class Day04 : AoC<List<string>, int, int>
 
         for (var row = 0; row < rows; row++)
         {
-            var sentence = new StringBuilder();
+            var sentence = new StringBuilder(columns);
 
             for (var column = 0; column < columns; column++)
                 sentence.Append(_searchSheet[row, column]);
@@ -67,7 +77,7 @@ internal class Day04 : AoC<List<string>, int, int>
 
         for (var column = 0; column < columns; column++)
         {
-            var sentence = new StringBuilder();
+            var sentence = new StringBuilder(rows);
             for (var row = 0; row < rows; row++)
                 sentence.Append(_searchSheet[row, column]);
             _searchSentences.Add(sentence.ToString());
@@ -113,14 +123,9 @@ internal class Day04 : AoC<List<string>, int, int>
         var occurrences = 0;
 
         foreach (var sentence in _searchSentences)
-            occurrences += CountPatternOccurences(sentence, "(?=(XMAS|SAMX))");
+            occurrences += Part1Regex.Matches(sentence).Count;
 
         return occurrences;
-    }
-
-    private static int CountPatternOccurences(string sentence, string pattern)
-    {
-        return Regex.Matches(sentence, pattern).Count;
     }
 
     public override int CalculatePart2()
@@ -137,7 +142,7 @@ internal class Day04 : AoC<List<string>, int, int>
                     var topLeftToBottomRight = ExtractDiagonal(row, column, -1, -1, 1, 1);
                     var bottomLeftToTopRight = ExtractDiagonal(row, column, 1, -1, -1, 1);
 
-                    if (ContainsPattern(topLeftToBottomRight, "MAS|SAM") && ContainsPattern(bottomLeftToTopRight, "MAS|SAM"))
+                    if (Part2Regex.IsMatch(topLeftToBottomRight) && Part2Regex.IsMatch(bottomLeftToTopRight))
                         occurrences++;
                 }
 
@@ -147,17 +152,22 @@ internal class Day04 : AoC<List<string>, int, int>
     private string ExtractDiagonal(int centerRow, int centerColumn, int startRowOffset, int startColOffset,
         int endRowOffset, int endColOffset)
     {
+        var rows = _searchSheet.GetLength(0);
+        var columns = _searchSheet.GetLength(1);
+
+        var startRow = centerRow + startRowOffset;
+        var startCol = centerColumn + startColOffset;
+        var endRow = centerRow + endRowOffset;
+        var endCol = centerColumn + endColOffset;
+
+        if (startRow < 0 || startRow >= rows || startCol < 0 || startCol >= columns ||
+            endRow < 0 || endRow >= rows || endCol < 0 || endCol >= columns)
+            return string.Empty;
+
         var sentence = new StringBuilder();
-
-        sentence.Append(_searchSheet[centerRow + startRowOffset, centerColumn + startColOffset]);
+        sentence.Append(_searchSheet[startRow, startCol]);
         sentence.Append(_searchSheet[centerRow, centerColumn]);
-        sentence.Append(_searchSheet[centerRow + endRowOffset, centerColumn + endColOffset]);
-
+        sentence.Append(_searchSheet[endRow, endCol]);
         return sentence.ToString();
-    }
-
-    private static bool ContainsPattern(string sentence, string pattern)
-    {
-        return Regex.IsMatch(sentence, pattern);
     }
 }
