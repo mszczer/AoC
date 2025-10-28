@@ -1,0 +1,25 @@
+﻿namespace AoC.AoC2024.Tests;
+
+public class Test_Day07
+{
+    private const string TestDayNumber = "Test_Day07";
+    private Day07 _day;
+
+    [SetUp]
+    public void Setup()
+    {
+        _day = new Day07(TestDayNumber);
+    }
+
+    [Test]
+    public void Day06_Part1_EndToEnd()
+    {
+        Assert.That(_day.CalculatePart1(), Is.EqualTo(3749));
+    }
+
+    [Test]
+    public void Day06_Part2_EndToEnd()
+    {
+        Assert.That(_day.CalculatePart2(), Is.EqualTo(11387));
+    }
+}
