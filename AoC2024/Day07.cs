@@ -68,18 +68,7 @@ public class Day07 : AoC<List<string>, long, long>
                 temp /= operatorSet.Length;
 
                 var next = calibration[pos + 2];
-                switch (op)
-                {
-                    case "+":
-                        result += next;
-                        break;
-                    case "*":
-                        result *= next;
-                        break;
-                    case "||":
-                        result = Concat(result, next);
-                        break;
-                }
+                result = ApplyOperator(result, next, op);
             }
 
             if (result == target)
@@ -87,6 +76,17 @@ public class Day07 : AoC<List<string>, long, long>
         }
 
         return false;
+    }
+
+    private static long ApplyOperator(long result, long next, string op)
+    {
+        return op switch
+        {
+            "+" => result + next,
+            "*" => result * next,
+            "||" => Concat(result, next),
+            _ => throw new InvalidOperationException("Unexpected operator value")
+        };
     }
 
     private static long Concat(long a, long b)
