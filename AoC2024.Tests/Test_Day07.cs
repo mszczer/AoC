@@ -12,13 +12,13 @@ public class Test_Day07
     }
 
     [Test]
-    public void Day06_Part1_EndToEnd()
+    public void Day07_Part1_EndToEnd()
     {
         Assert.That(_day.CalculatePart1(), Is.EqualTo(3749));
     }
 
     [Test]
-    public void Day06_Part2_EndToEnd()
+    public void Day07_Part2_EndToEnd()
     {
         Assert.That(_day.CalculatePart2(), Is.EqualTo(11387));
     }
