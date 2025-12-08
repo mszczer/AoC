@@ -1,12 +1,11 @@
-﻿using System.Drawing;
-
-namespace AoC.AoC2024;
+﻿namespace AoC.AoC2024;
 
 public class Day08 : AoC<List<string>, int, int>
 {
     private char[,] _antennaMap;
-    private readonly List<Point> _antinodes = [];
-
+    private readonly HashSet<Cell> _antinodes = [];
+    
+    private readonly record struct Cell(int Row, int Col);
 
     public Day08(string dayName) : base(dayName)
     {
@@ -25,67 +24,30 @@ public class Day08 : AoC<List<string>, int, int>
         _antennaMap = new char[rows, columns];
 
         for (var row = 0; row < rows; row++)
-        for (var column = 0; column < columns; column++)
-            _antennaMap[row, column] = InputData[row][column];
+            for (var column = 0; column < columns; column++)
+                _antennaMap[row, column] = InputData[row][column];
     }
 
     public override int CalculatePart1()
     {
         _antinodes.Clear();
 
-        var rows = _antennaMap.GetLength(0);
-        var columns = _antennaMap.GetLength(1);
-
-        for (var r = 0; r < rows; r++)
-            for (var c = 0; c < columns; c++)
-            {
-                if (_antennaMap[r, c] == '.')
-                    continue;
-
-                var antenna = _antennaMap[r, c];
-
-                for (var searchedRow = r; searchedRow < rows; searchedRow++)
-                {
-                    var startColumn = searchedRow == r ? c + 1 : 0;
-                    for (var searchedColumn = startColumn; searchedColumn < columns; searchedColumn++)
-                        if (_antennaMap[searchedRow, searchedColumn] == antenna)
-                            AddAntinodes(new Point(r, c), new Point(searchedRow, searchedColumn), _antinodes);
-                }
-            }
+        ProcessMatchingPairs(HandleAddAntinodes);
 
         return _antinodes.Count;
-    }
-
-    private void AddAntinodes(Point firstLocation, Point secondLocation, List<Point> antinodes)
-    {
-        var dx = secondLocation.X - firstLocation.X;
-        var dy = secondLocation.Y - firstLocation.Y;
-
-        if (dx == 0 && dy == 0)
-            return;
-
-        var firstAntinode = new Point(secondLocation.X + dx, secondLocation.Y + dy);
-        var secondAntinode = new Point(firstLocation.X - dx, firstLocation.Y - dy);
-
-        if (IsPointValid(firstAntinode) && !antinodes.Contains(firstAntinode))
-            antinodes.Add(firstAntinode);
-
-        if (IsPointValid(secondAntinode) && !antinodes.Contains(secondAntinode))
-            antinodes.Add(secondAntinode);
-    }
-
-    private bool IsPointValid(Point antinode)
-    {
-        var rows = _antennaMap.GetLength(0);
-        var columns = _antennaMap.GetLength(1);
-
-        return antinode.X >= 0 && antinode.X < rows && antinode.Y >= 0 && antinode.Y < columns;
     }
 
     public override int CalculatePart2()
     {
         _antinodes.Clear();
 
+        ProcessMatchingPairs(HandleAddHarmonicAntinodes);
+
+        return _antinodes.Count;
+    }
+
+    private void ProcessMatchingPairs(Action<Cell, Cell> handler)
+    {
         var rows = _antennaMap.GetLength(0);
         var columns = _antennaMap.GetLength(1);
 
@@ -102,46 +64,77 @@ public class Day08 : AoC<List<string>, int, int>
                     var startColumn = searchedRow == r ? c + 1 : 0;
                     for (var searchedColumn = startColumn; searchedColumn < columns; searchedColumn++)
                         if (_antennaMap[searchedRow, searchedColumn] == antenna)
-                            AddHarmonicAntinodes(new Point(r, c), new Point(searchedRow, searchedColumn), _antinodes);
+                            handler(new Cell(r, c), new Cell(searchedRow, searchedColumn));
                 }
             }
-
-        return _antinodes.Count;
     }
 
-    private void AddHarmonicAntinodes(Point firstLocation, Point secondLocation, List<Point> antinodes)
-    {
-        var dx = secondLocation.X - firstLocation.X;
-        var dy = secondLocation.Y - firstLocation.Y;
+    private void HandleAddAntinodes(Cell first, Cell second) =>
+        AddAntinodes(first, second);
 
-        if (dx == 0 && dy == 0)
+    private void HandleAddHarmonicAntinodes(Cell first, Cell second) =>
+        AddHarmonicAntinodes(first, second);
+
+    private void AddAntinodes(Cell firstLocation, Cell secondLocation)
+    {
+        var dRow = secondLocation.Row - firstLocation.Row;
+        var dCol = secondLocation.Col - firstLocation.Col;
+
+        if (dRow == 0 && dCol == 0)
+            return;
+
+        var firstAntinode = new Cell(secondLocation.Row + dRow, secondLocation.Col + dCol);
+        var secondAntinode = new Cell(firstLocation.Row - dRow, firstLocation.Col - dCol);
+
+        if (IsCellValid(firstAntinode))
+            _antinodes.Add(firstAntinode);
+
+        if (IsCellValid(secondAntinode))
+            _antinodes.Add(secondAntinode);
+    }
+
+    private bool IsCellValid(Cell antinode)
+    {
+        var rows = _antennaMap.GetLength(0);
+        var columns = _antennaMap.GetLength(1);
+
+        return antinode.Row >= 0 && antinode.Row < rows && antinode.Col >= 0 && antinode.Col < columns;
+    }
+
+
+    private void AddHarmonicAntinodes(Cell firstLocation, Cell secondLocation)
+    {
+        var dRow = secondLocation.Row - firstLocation.Row;
+        var dCol = secondLocation.Col - firstLocation.Col;
+
+        if (dRow == 0 && dCol == 0)
             return;
 
         var firstHarmonicLocation = firstLocation;
         var secondHarmonicLocation = secondLocation;
 
-        if (IsPointValid(firstLocation) && !antinodes.Contains(firstLocation))
-            antinodes.Add(firstLocation);
+        if (IsCellValid(firstLocation))
+            _antinodes.Add(firstLocation);
 
-        if (IsPointValid(secondLocation) && !antinodes.Contains(secondLocation))
-            antinodes.Add(secondLocation);
+        if (IsCellValid(secondLocation))
+            _antinodes.Add(secondLocation);
 
-        while (IsPointValid(secondHarmonicLocation))
+        while (IsCellValid(secondHarmonicLocation))
         {
-            var firstAntinode = new Point(secondHarmonicLocation.X + dx, secondHarmonicLocation.Y + dy);
-            if (IsPointValid(firstAntinode) && !antinodes.Contains(firstAntinode))
-                antinodes.Add(firstAntinode);
+            var firstAntinode = new Cell(secondHarmonicLocation.Row + dRow, secondHarmonicLocation.Col + dCol);
+            if (IsCellValid(firstAntinode))
+                _antinodes.Add(firstAntinode);
             secondHarmonicLocation = firstAntinode;
         }
 
         firstHarmonicLocation = firstLocation;
         secondHarmonicLocation = secondLocation;
 
-        while (IsPointValid(firstHarmonicLocation))
+        while (IsCellValid(firstHarmonicLocation))
         {
-            var secondAntinode = new Point(firstHarmonicLocation.X - dx, firstHarmonicLocation.Y - dy);
-            if (IsPointValid(secondAntinode) && !antinodes.Contains(secondAntinode))
-                antinodes.Add(secondAntinode);
+            var secondAntinode = new Cell(firstHarmonicLocation.Row - dRow, firstHarmonicLocation.Col - dCol);
+            if (IsCellValid(secondAntinode))
+                _antinodes.Add(secondAntinode);
             firstHarmonicLocation = secondAntinode;
         }
     }
