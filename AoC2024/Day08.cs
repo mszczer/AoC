@@ -110,14 +110,13 @@ public class Day08 : AoC<List<string>, int, int>
         if (dRow == 0 && dCol == 0)
             return;
 
-        var firstHarmonicLocation = firstLocation;
-        var secondHarmonicLocation = secondLocation;
-
         if (IsCellValid(firstLocation))
             _antinodes.Add(firstLocation);
 
         if (IsCellValid(secondLocation))
             _antinodes.Add(secondLocation);
+
+        var secondHarmonicLocation = secondLocation;
 
         while (IsCellValid(secondHarmonicLocation))
         {
@@ -127,8 +126,7 @@ public class Day08 : AoC<List<string>, int, int>
             secondHarmonicLocation = firstAntinode;
         }
 
-        firstHarmonicLocation = firstLocation;
-        secondHarmonicLocation = secondLocation;
+        var firstHarmonicLocation = firstLocation;
 
         while (IsCellValid(firstHarmonicLocation))
         {
