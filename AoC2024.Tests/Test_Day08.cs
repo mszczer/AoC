@@ -20,6 +20,6 @@ public class Test_Day08
     [Test]
     public void Day08_Part2_EndToEnd()
     {
-        Assert.That(_day.CalculatePart2(), Is.EqualTo(int.MaxValue));
+        Assert.That(_day.CalculatePart2(), Is.EqualTo(34));
     }
 }

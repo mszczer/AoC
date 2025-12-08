@@ -37,21 +37,21 @@ public class Day08 : AoC<List<string>, int, int>
         var columns = _antennaMap.GetLength(1);
 
         for (var r = 0; r < rows; r++)
-        for (var c = 0; c < columns; c++)
-        {
-            if (_antennaMap[r, c] == '.')
-                continue;
-
-            var antenna = _antennaMap[r, c];
-
-            for (var searchedRow = r; searchedRow < rows; searchedRow++)
+            for (var c = 0; c < columns; c++)
             {
-                var startColumn = searchedRow == r ? c + 1 : 0;
-                for (var searchedColumn = startColumn; searchedColumn < columns; searchedColumn++)
-                    if (_antennaMap[searchedRow, searchedColumn] == antenna)
-                        AddAntinodes(new Point(r, c), new Point(searchedRow, searchedColumn), _antinodes);
+                if (_antennaMap[r, c] == '.')
+                    continue;
+
+                var antenna = _antennaMap[r, c];
+
+                for (var searchedRow = r; searchedRow < rows; searchedRow++)
+                {
+                    var startColumn = searchedRow == r ? c + 1 : 0;
+                    for (var searchedColumn = startColumn; searchedColumn < columns; searchedColumn++)
+                        if (_antennaMap[searchedRow, searchedColumn] == antenna)
+                            AddAntinodes(new Point(r, c), new Point(searchedRow, searchedColumn), _antinodes);
+                }
             }
-        }
 
         return _antinodes.Count;
     }
@@ -84,6 +84,65 @@ public class Day08 : AoC<List<string>, int, int>
 
     public override int CalculatePart2()
     {
-        throw new NotImplementedException();
+        _antinodes.Clear();
+
+        var rows = _antennaMap.GetLength(0);
+        var columns = _antennaMap.GetLength(1);
+
+        for (var r = 0; r < rows; r++)
+            for (var c = 0; c < columns; c++)
+            {
+                if (_antennaMap[r, c] == '.')
+                    continue;
+
+                var antenna = _antennaMap[r, c];
+
+                for (var searchedRow = r; searchedRow < rows; searchedRow++)
+                {
+                    var startColumn = searchedRow == r ? c + 1 : 0;
+                    for (var searchedColumn = startColumn; searchedColumn < columns; searchedColumn++)
+                        if (_antennaMap[searchedRow, searchedColumn] == antenna)
+                            AddHarmonicAntinodes(new Point(r, c), new Point(searchedRow, searchedColumn), _antinodes);
+                }
+            }
+
+        return _antinodes.Count;
+    }
+
+    private void AddHarmonicAntinodes(Point firstLocation, Point secondLocation, List<Point> antinodes)
+    {
+        var dx = secondLocation.X - firstLocation.X;
+        var dy = secondLocation.Y - firstLocation.Y;
+
+        if (dx == 0 && dy == 0)
+            return;
+
+        var firstHarmonicLocation = firstLocation;
+        var secondHarmonicLocation = secondLocation;
+
+        if (IsPointValid(firstLocation) && !antinodes.Contains(firstLocation))
+            antinodes.Add(firstLocation);
+
+        if (IsPointValid(secondLocation) && !antinodes.Contains(secondLocation))
+            antinodes.Add(secondLocation);
+
+        while (IsPointValid(secondHarmonicLocation))
+        {
+            var firstAntinode = new Point(secondHarmonicLocation.X + dx, secondHarmonicLocation.Y + dy);
+            if (IsPointValid(firstAntinode) && !antinodes.Contains(firstAntinode))
+                antinodes.Add(firstAntinode);
+            secondHarmonicLocation = firstAntinode;
+        }
+
+        firstHarmonicLocation = firstLocation;
+        secondHarmonicLocation = secondLocation;
+
+        while (IsPointValid(firstHarmonicLocation))
+        {
+            var secondAntinode = new Point(firstHarmonicLocation.X - dx, firstHarmonicLocation.Y - dy);
+            if (IsPointValid(secondAntinode) && !antinodes.Contains(secondAntinode))
+                antinodes.Add(secondAntinode);
+            firstHarmonicLocation = secondAntinode;
+        }
     }
 }
