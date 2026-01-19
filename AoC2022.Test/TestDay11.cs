@@ -6,7 +6,7 @@ namespace AoC.AoC2022.Tests
     [TestFixture]
     public class TestDay11
     {
-        private const string TestDayNumber = "Test_Day11";
+        private const string TestDayNumber = "TestDay11";
         private Day11 _day;
 
         [SetUp]

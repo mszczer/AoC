@@ -26,49 +26,49 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="InputData\Test_Day01.txt">
+    <None Update="InputData\TestDay01.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="InputData\Test_Day02.txt">
+    <None Update="InputData\TestDay02.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="InputData\Test_Day03.txt">
+    <None Update="InputData\TestDay03.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="InputData\Test_Day04.txt">
+    <None Update="InputData\TestDay04.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="InputData\Test_Day05.txt">
+    <None Update="InputData\TestDay05.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="InputData\Test_Day06.txt">
+    <None Update="InputData\TestDay06.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="InputData\Test_Day07.txt">
+    <None Update="InputData\TestDay07.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="InputData\Test_Day08.txt">
+    <None Update="InputData\TestDay08.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="InputData\Test_Day09.txt">
+    <None Update="InputData\TestDay09.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="InputData\Test_Day09_Part2.txt">
+    <None Update="InputData\TestDay09_Part2.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="InputData\Test_Day10.txt">
+    <None Update="InputData\TestDay10.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="InputData\Test_Day11.txt">
+    <None Update="InputData\TestDay11.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="InputData\Test_Day12.txt">
+    <None Update="InputData\TestDay12.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="InputData\Test_Day13.txt">
+    <None Update="InputData\TestDay13.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="InputData\Test_Day14.txt">
+    <None Update="InputData\TestDay14.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>

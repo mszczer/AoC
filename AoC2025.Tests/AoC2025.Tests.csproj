@@ -17,7 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\AoC2025\AoC2025.csproj" />
+    <ProjectReference Include="..\AoC2025\AoC.AoC2025.csproj" />
     <ProjectReference Include="..\Common\AoC.Common.csproj" />
   </ItemGroup>
 

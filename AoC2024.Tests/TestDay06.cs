@@ -5,9 +5,9 @@ namespace AoC.AoC2024.Tests;
 [TestFixture]
 [Parallelizable(ParallelScope.All)]
 
-public class Test_Day06
+public class TestDay06
 {
-    private const string TestDayNumber = "Test_Day06";
+    private const string TestDayNumber = "TestDay06";
     private Day06 _day;
 
     [SetUp]

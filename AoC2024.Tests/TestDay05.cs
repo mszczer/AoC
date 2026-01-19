@@ -2,9 +2,9 @@
 
 [TestFixture]
 [Parallelizable(ParallelScope.All)]
-public class Test_Day05
+public class TestDay05
 {
-    private const string TestDayNumber = "Test_Day05";
+    private const string TestDayNumber = "TestDay05";
     private Day05 _day;
 
     [SetUp]

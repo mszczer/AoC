@@ -2,9 +2,9 @@
 
 namespace AoC.AoC2024.Tests;
 
-public class Test_Day08
+public class TestDay08
 {
-    private const string TestDayNumber = "Test_Day08";
+    private const string TestDayNumber = "TestDay08";
     private Day08 _day;
 
     [SetUp]

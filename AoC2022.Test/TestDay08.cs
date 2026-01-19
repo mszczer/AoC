@@ -7,7 +7,7 @@ namespace AoC.AoC2022.Tests
     [Parallelizable(ParallelScope.All)]
     public class TestDay08
     {
-        private const string TestDayNumber = "Test_Day08";
+        private const string TestDayNumber = "TestDay08";
         private Day08 _day;
 
         [SetUp]
