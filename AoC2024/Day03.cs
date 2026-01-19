@@ -1,11 +1,11 @@
 ﻿namespace AoC.AoC2024;
 
-public class Day03 : AoC<List<string>, int, int>
+public partial class Day03 : AoC<List<string>, int, int>
 {
     private static readonly Regex InstructionRegex =
-        new(@"do\(\)|don't\(\)|mul\((\d{1,3}),(\d{1,3})\)", RegexOptions.Compiled);
+        InstructionPattern();
 
-    private static readonly Regex NumberRegex = new(@"\d{1,3}", RegexOptions.Compiled);
+    private static readonly Regex NumberRegex = NumberPattern();
     private List<string> _instructions;
 
     public Day03(string dayName) : base(dayName)
@@ -22,10 +22,11 @@ public class Day03 : AoC<List<string>, int, int>
     {
         _instructions = [];
 
-        foreach (var memoryDump in InputData)
+        foreach (var memoryDump in InputData ?? Enumerable.Empty<string>())
         {
-            var matchingInstructions = InstructionRegex.Matches(memoryDump);
+            if (string.IsNullOrEmpty(memoryDump)) continue;
 
+            var matchingInstructions = InstructionRegex.Matches(memoryDump);
             foreach (Match match in matchingInstructions)
                 _instructions.Add(match.Value);
         }
@@ -69,4 +70,9 @@ public class Day03 : AoC<List<string>, int, int>
 
         return mulResults;
     }
+
+    [GeneratedRegex(@"do\(\)|don't\(\)|mul\((\d{1,3}),(\d{1,3})\)", RegexOptions.Compiled)]
+    private static partial Regex InstructionPattern();
+    [GeneratedRegex(@"\d{1,3}", RegexOptions.Compiled)]
+    private static partial Regex NumberPattern();
 }

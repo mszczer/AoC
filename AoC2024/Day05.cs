@@ -5,7 +5,6 @@ public class Day05 : AoC<List<string>, int, int>
     private HashSet<(int, int)> _pageOrderingRules;
     private List<List<int>> _updates;
 
-
     public Day05(string dayName, string inputDirectory) : base(dayName, inputDirectory)
     {
         ParseInputData();
@@ -28,20 +27,26 @@ public class Day05 : AoC<List<string>, int, int>
 
         var pageOrderingSection = true;
 
-        foreach (var line in InputData)
-            if (string.IsNullOrWhiteSpace(line))
+        foreach (var rawLine in InputData ?? Enumerable.Empty<string>())
+        {
+            if (string.IsNullOrWhiteSpace(rawLine))
             {
                 pageOrderingSection = false;
+                continue;
             }
-            else if (pageOrderingSection)
+
+            var line = rawLine.Trim();
+            if (pageOrderingSection)
             {
-                var parts = line.Split('|');
-                if (parts.Length == 2 && int.TryParse(parts[0], out var first) &&
-                    int.TryParse(parts[1], out var second)) _pageOrderingRules.Add((first, second));
+                var parts = line.Split('|', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+                if (parts.Length == 2 &&
+                    int.TryParse(parts[0], out var first) &&
+                    int.TryParse(parts[1], out var second))
+                    _pageOrderingRules.Add((first, second));
             }
             else
             {
-                var parts = line.Split(',');
+                var parts = line.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
                 var pageNumbers = new List<int>();
                 foreach (var part in parts)
                     if (int.TryParse(part, out var num))
@@ -49,6 +54,7 @@ public class Day05 : AoC<List<string>, int, int>
                 if (pageNumbers.Count > 0)
                     _updates.Add(pageNumbers);
             }
+        }
     }
 
     public override int CalculatePart1()
@@ -65,9 +71,9 @@ public class Day05 : AoC<List<string>, int, int>
     private static bool IsCorrectOrder(IReadOnlyList<int> update, HashSet<(int, int)> pageOrderingRules)
     {
         for (var firstPage = 0; firstPage < update.Count - 1; firstPage++)
-            for (var secondPage = firstPage + 1; secondPage < update.Count; secondPage++)
-                if (!pageOrderingRules.Contains((update[firstPage], update[secondPage])))
-                    return false;
+        for (var secondPage = firstPage + 1; secondPage < update.Count; secondPage++)
+            if (!pageOrderingRules.Contains((update[firstPage], update[secondPage])))
+                return false;
 
         return true;
     }
@@ -85,6 +91,7 @@ public class Day05 : AoC<List<string>, int, int>
 
     private static int GetMiddlePageNumber(IReadOnlyList<int> update)
     {
+        if (update == null || update.Count == 0) return 0;
         return update[update.Count / 2];
     }
 
@@ -93,6 +100,8 @@ public class Day05 : AoC<List<string>, int, int>
     {
         var sortedUpdate = update.ToList();
         var swapped = false;
+
+        if (sortedUpdate.Count < 2) return sortedUpdate;
 
         do
         {

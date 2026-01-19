@@ -8,24 +8,29 @@ internal class Day02 : AoC<List<string>, int, int>
     {
         ParseReports();
     }
-    
+
     public Day02(string dayName, List<string> inputData) : base(dayName, inputData)
     {
         ParseReports();
     }
+
     private void ParseReports()
     {
-        _reports = new List<List<int>>();
+        _reports = [];
 
-        foreach (var reportLine in InputData)
+        foreach (var reportLine in InputData ?? Enumerable.Empty<string>())
         {
+            if (string.IsNullOrWhiteSpace(reportLine)) continue;
+
             var report = new List<int>();
-            var substrings = reportLine.Split();
+            var substrings = reportLine.Split((char[])null, StringSplitOptions.RemoveEmptyEntries);
 
             foreach (var level in substrings)
-                report.Add(int.Parse(level));
+                if (int.TryParse(level, out var parsed))
+                    report.Add(parsed);
 
-            _reports.Add(report);
+            if (report.Count > 0)
+                _reports.Add(report);
         }
     }
 
@@ -42,7 +47,7 @@ internal class Day02 : AoC<List<string>, int, int>
 
     private static bool IsReportSafe(IReadOnlyList<int> report)
     {
-        if (report.Count <= 1) return true; // single element lists are considered consistent
+        if (report is not { Count: > 1 }) return true; // single element lists are considered consistent
 
         bool? isIncreasing = null;
 
@@ -54,21 +59,21 @@ internal class Day02 : AoC<List<string>, int, int>
 
             if (isIncreasing == null)
                 isIncreasing = report[i] > report[i - 1];
-
-            // either gradually increasing and gradually decreasing
             else if ((isIncreasing == true && report[i] < report[i - 1]) ||
-                     (isIncreasing == false && report[i] > report[i - 1])
-                    ) return false;
+                     (isIncreasing == false && report[i] > report[i - 1]))
+                return false;
         }
 
         return true;
     }
 
-    private static bool IsReportSafeWithSingleBadTolerance(IReadOnlyList<int> report)
+    private static bool IsReportSafeWithSingleBadTolerance(IReadOnlyList<int>? report)
     {
+        if (report == null) return false;
+
         for (var i = 0; i < report.Count; i++)
         {
-            var tempReport = new List<int>();
+            var tempReport = new List<int>(report.Count - 1);
 
             for (var level = 0; level < report.Count; level++)
                 if (level != i)

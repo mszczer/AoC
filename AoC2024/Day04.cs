@@ -2,12 +2,12 @@
 
 namespace AoC.AoC2024;
 
-internal class Day04 : AoC<List<string>, int, int>
+internal partial class Day04 : AoC<List<string>, int, int>
 {
     private char[,] _searchSheet;
     private List<string> _searchSentences;
-    private static readonly Regex Part1Regex = new("(?=(XMAS|SAMX))", RegexOptions.Compiled);
-    private static readonly Regex Part2Regex = new("MAS|SAM", RegexOptions.Compiled);
+    private static readonly Regex Part1Regex = FirstPattern();
+    private static readonly Regex Part2Regex = SecondPattern();
 
     public Day04(string dayName, string inputDirectory) : base(dayName, inputDirectory)
     {
@@ -32,17 +32,22 @@ internal class Day04 : AoC<List<string>, int, int>
 
     private void InitializeSearchSheet()
     {
-        if (InputData == null || InputData.Count == 0 || InputData[0].Length == 0)
+        var data = InputData ?? throw new InvalidOperationException("InputData is empty or not initialized.");
+        if (data.Count == 0 || string.IsNullOrEmpty(data[0]))
             throw new InvalidOperationException("InputData is empty or not initialized.");
 
-        var rows = InputData.Count;
-        var columns = InputData[0].Length;
+        var rows = data.Count;
+        var columns = data[0].Length;
+
+        // Ensure all rows have same length
+        if (data.Any(r => r == null || r.Length != columns))
+            throw new FormatException("All input rows must have the same length.");
 
         _searchSheet = new char[rows, columns];
 
         for (var row = 0; row < rows; row++)
-            for (var column = 0; column < columns; column++)
-                _searchSheet[row, column] = InputData[row][column];
+        for (var column = 0; column < columns; column++)
+            _searchSheet[row, column] = data[row][column];
     }
 
     private void GenerateSearchSentences()
@@ -90,7 +95,6 @@ internal class Day04 : AoC<List<string>, int, int>
         var columns = _searchSheet.GetLength(1);
         var totalDiagonals = rows + columns - 1;
 
-
         for (var diag = 0; diag < totalDiagonals; diag++)
         {
             var sentence = new StringBuilder();
@@ -136,15 +140,15 @@ internal class Day04 : AoC<List<string>, int, int>
         var columns = _searchSheet.GetLength(1);
 
         for (var row = 1; row < rows - 1; row++)
-            for (var column = 1; column < columns - 1; column++)
-                if (_searchSheet[row, column] == 'A')
-                {
-                    var topLeftToBottomRight = ExtractDiagonal(row, column, -1, -1, 1, 1);
-                    var bottomLeftToTopRight = ExtractDiagonal(row, column, 1, -1, -1, 1);
+        for (var column = 1; column < columns - 1; column++)
+            if (_searchSheet[row, column] == 'A')
+            {
+                var topLeftToBottomRight = ExtractDiagonal(row, column, -1, -1, 1, 1);
+                var bottomLeftToTopRight = ExtractDiagonal(row, column, 1, -1, -1, 1);
 
-                    if (Part2Regex.IsMatch(topLeftToBottomRight) && Part2Regex.IsMatch(bottomLeftToTopRight))
-                        occurrences++;
-                }
+                if (Part2Regex.IsMatch(topLeftToBottomRight) && Part2Regex.IsMatch(bottomLeftToTopRight))
+                    occurrences++;
+            }
 
         return occurrences;
     }
@@ -164,10 +168,15 @@ internal class Day04 : AoC<List<string>, int, int>
             endRow < 0 || endRow >= rows || endCol < 0 || endCol >= columns)
             return string.Empty;
 
-        var sentence = new StringBuilder();
+        var sentence = new StringBuilder(3);
         sentence.Append(_searchSheet[startRow, startCol]);
         sentence.Append(_searchSheet[centerRow, centerColumn]);
         sentence.Append(_searchSheet[endRow, endCol]);
         return sentence.ToString();
     }
+
+    [GeneratedRegex("(?=(XMAS|SAMX))", RegexOptions.Compiled)]
+    private static partial Regex FirstPattern();
+    [GeneratedRegex("MAS|SAM", RegexOptions.Compiled)]
+    private static partial Regex SecondPattern();
 }
