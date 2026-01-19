@@ -3,9 +3,9 @@ using System.Text.RegularExpressions;
 
 namespace AoC.AoC2022;
 
-internal class Day14 : AoC<List<string>, int, int>
+internal partial class Day14 : AoC<List<string>, int, int>
 {
-    private List<Point> _rockPoints;
+    private HashSet<Point> _rockPoints;
     private int _maxDepth;
 
     public Day14(string dayName) : base(dayName)
@@ -16,12 +16,16 @@ internal class Day14 : AoC<List<string>, int, int>
     private void GetInitialPaths()
     {
         _maxDepth = 0;
-        _rockPoints = new List<Point>();
+        _rockPoints = new HashSet<Point>();
+
+        if (InputData == null) return;
 
         foreach (var path in InputData)
         {
+            if (string.IsNullOrWhiteSpace(path)) continue;
+
             // get points of direction change
-            var coordinates = Regex.Split(path, @"\D+");
+            var coordinates = SearchedPattern().Split(path).Where(s => !string.IsNullOrEmpty(s)).ToArray();
             var turningPoints = new List<Point>();
             var x = 0;
             var y = 0;
@@ -42,19 +46,15 @@ internal class Day14 : AoC<List<string>, int, int>
             {
                 var pathPoints = GetPointsOnPath(turningPoints[i - 1], turningPoints[i]);
                 foreach (var point in pathPoints)
-                    if (!_rockPoints.Contains(point))
-                    {
-                        _rockPoints.Add(point);
-
+                    if (_rockPoints.Add(point))
                         // get max depth (the last one before 'infinite' fall)
                         if (point.Y > _maxDepth)
                             _maxDepth = point.Y;
-                    }
             }
         }
     }
 
-    private static IEnumerable<Point> GetPointsOnPath(Point start, Point end)
+    private static List<Point> GetPointsOnPath(Point start, Point end)
     {
         var pointsOnPath = new List<Point>();
 
@@ -82,14 +82,12 @@ internal class Day14 : AoC<List<string>, int, int>
         var sandUnits = 0;
         var restPoint = new Point();
 
-        var rockPoints = new List<Point>();
-        rockPoints.AddRange(_rockPoints);
+        var rockPoints = new HashSet<Point>(_rockPoints);
 
         while (restPoint.Y < _maxDepth)
         {
             restPoint = GetRestPoint(new Point(500, 0), rockPoints, _maxDepth);
-            if (!rockPoints.Contains(restPoint))
-                rockPoints.Add(restPoint);
+            rockPoints.Add(restPoint);
             sandUnits++;
         }
 
@@ -121,14 +119,12 @@ internal class Day14 : AoC<List<string>, int, int>
         var sandUnits = 0;
         var falling = true;
 
-        var rockPoints = new List<Point>();
-        rockPoints.AddRange(_rockPoints);
+        var rockPoints = new HashSet<Point>(_rockPoints);
 
         while (falling)
         {
             var restPoint = GetRestPointWithDepthLimit(new Point(500, 0), rockPoints, _maxDepth + 2);
-            if (!rockPoints.Contains(restPoint))
-                rockPoints.Add(restPoint);
+            rockPoints.Add(restPoint);
             if (restPoint.Y == 0)
                 falling = false;
             sandUnits++;
@@ -154,4 +150,7 @@ internal class Day14 : AoC<List<string>, int, int>
 
         return restPoint;
     }
+
+    [GeneratedRegex(@"\D+")]
+    private static partial Regex SearchedPattern();
 }

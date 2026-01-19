@@ -28,14 +28,14 @@ public class Test_Day05
     [Test]
     public void Day05_EmptyInput_Part1_ReturnsZero()
     {
-        var day = new Day05("EmptyInput", []);
+        var day = new Day05("EmptyInput", new List<string>());
         Assert.That(day.CalculatePart1(), Is.EqualTo(0));
     }
 
     [Test]
     public void Day05_EmptyInput_Part2_ReturnsZero()
     {
-        var day = new Day05("EmptyInput", []);
+        var day = new Day05("EmptyInput", new List<string>());
         Assert.That(day.CalculatePart2(), Is.EqualTo(0));
     }
 

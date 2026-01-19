@@ -1,65 +1,67 @@
-﻿using System.Linq;
+﻿namespace AoC.AoC2022;
 
-namespace AoC.AoC2022
+internal class Day01(string dayName) : AoC<List<string>, int, int>(dayName)
 {
-    internal class Day01 : AoC<List<string>, int, int>
+    public override int CalculatePart1()
     {
-        public Day01(string dayName) : base(dayName)
-        {
-        }
+        return CalculateMaxCaloriesCarried();
+    }
 
-        public override int CalculatePart1()
-        {
-            return CalculateMaxCaloriesCarried();
-        }
+    public override int CalculatePart2()
+    {
+        var caloriesList = CalculateCaloriesPerElf().ToList();
+        return caloriesList.OrderByDescending(i => i).Take(3).Sum();
+    }
 
-        public override int CalculatePart2()
-        {
-            var caloriesList = CalculateCaloriesPerElf();
-            return caloriesList.OrderByDescending(i => i).Take(3).Sum();
-        }
+    private int CalculateMaxCaloriesCarried()
+    {
+        if (InputData == null || InputData.Count == 0) return 0;
 
-        private int CalculateMaxCaloriesCarried()
-        {
-            var maxCalories = 0;
-            var elfCalories = 0;
+        var maxCalories = 0;
+        var elfCalories = 0;
 
-            foreach (var calorie in InputData)
-                if (calorie != "")
-                {
-                    int.TryParse(calorie, out var num);
+        foreach (var calorie in InputData)
+            if (!string.IsNullOrEmpty(calorie))
+            {
+                if (int.TryParse(calorie, out var num))
                     elfCalories += num;
 
-                    if (elfCalories > maxCalories) maxCalories = elfCalories;
-                }
-                else
-                {
-                    elfCalories = 0;
-                }
+                if (elfCalories > maxCalories) maxCalories = elfCalories;
+            }
+            else
+            {
+                elfCalories = 0;
+            }
 
-            return maxCalories;
-        }
+        // Ensure last elf group considered (already handled during accumulation but keep defensively)
+        maxCalories = Math.Max(maxCalories, elfCalories);
 
-        private IEnumerable<int> CalculateCaloriesPerElf()
-        {
-            var caloriesCarried = new List<int>();
-            var elfCalories = 0;
+        return maxCalories;
+    }
 
-            foreach (var calorie in InputData)
-                if (calorie != "")
-                {
-                    int.TryParse(calorie, out var num);
+    private IEnumerable<int> CalculateCaloriesPerElf()
+    {
+        var caloriesCarried = new List<int>();
+
+        if (InputData == null || InputData.Count == 0) return caloriesCarried;
+
+        var elfCalories = 0;
+
+        foreach (var calorie in InputData)
+            if (!string.IsNullOrEmpty(calorie))
+            {
+                if (int.TryParse(calorie, out var num))
                     elfCalories += num;
-                }
-                else
-                {
-                    caloriesCarried.Add(elfCalories);
-                    elfCalories = 0;
-                }
+            }
+            else
+            {
+                caloriesCarried.Add(elfCalories);
+                elfCalories = 0;
+            }
 
-            caloriesCarried.Add(elfCalories);
+        // Add final group
+        caloriesCarried.Add(elfCalories);
 
-            return caloriesCarried;
-        }
+        return caloriesCarried;
     }
 }

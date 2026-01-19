@@ -1,133 +1,147 @@
-﻿namespace AoC.AoC2022
+﻿namespace AoC.AoC2022;
+
+internal class Day08 : AoC<List<string>, int, int>
 {
-    internal class Day08 : AoC<List<string>, int, int>
+    private int[,] _grid;
+
+    public Day08(string dayName) : base(dayName)
     {
-        private int[,] _grid;
+        SetGrid();
+    }
 
-        public Day08(string dayName) : base(dayName)
+    private void SetGrid()
+    {
+        if (InputData == null || InputData.Count == 0)
+            throw new InvalidOperationException("InputData is empty or not initialized.");
+
+        var numberOfRows = InputData.Count;
+        var numberOfColumns = InputData[0]?.Length ?? 0;
+        if (numberOfColumns == 0)
+            throw new InvalidOperationException("InputData contains empty rows.");
+
+        // validate all rows have same length
+        foreach (var rowStr in InputData)
+            if (rowStr == null || rowStr.Length != numberOfColumns)
+                throw new FormatException("Inconsistent row lengths in input data.");
+
+        _grid = new int[numberOfRows, numberOfColumns];
+
+        for (var row = 0; row < numberOfRows; row++)
+        for (var column = 0; column < numberOfColumns; column++)
         {
-            SetGrid();
+            var ch = InputData[row][column];
+            if (!char.IsDigit(ch))
+                throw new FormatException($"Invalid character '{ch}' at row {row}, column {column}; expected digit.");
+            _grid[row, column] = ch - '0';
         }
+    }
 
-        private void SetGrid()
+    public override int CalculatePart1()
+    {
+        var sumVisible = 0;
+
+        for (var row = 0; row < _grid.GetLength(0); row++)
+        for (var column = 0; column < _grid.GetLength(1); column++)
+            if (IsVisible(row, column))
+                sumVisible++;
+        return sumVisible;
+    }
+
+    private bool IsVisible(int row, int column)
+    {
+        return IsVisible(row, column, "up") ||
+               IsVisible(row, column, "right") ||
+               IsVisible(row, column, "down") ||
+               IsVisible(row, column, "left");
+    }
+
+    private bool IsVisible(int row, int column, string edgeDirection)
+    {
+        switch (edgeDirection)
         {
-            var numberOfRows = InputData.Count;
-            var numberOfColumns = InputData[0].Length;
-
-            _grid = new int[numberOfRows, numberOfColumns];
-
-            for (var row = 0; row < numberOfRows; row++)
-                for (var column = 0; column < numberOfColumns; column++)
-                    _grid[row, column] = int.Parse(InputData[row][column].ToString());
-        }
-
-        public override int CalculatePart1()
-        {
-            var sumVisible = 0;
-
-            for (var row = 0; row < _grid.GetLength(0); row++)
-            for (var column = 0; column < _grid.GetLength(1); column++)
-                if (IsVisible(row, column))
-                    sumVisible++;
-            return sumVisible;
-        }
-
-        private bool IsVisible(int row, int column)
-        {
-            return IsVisible(row, column, "up") ||
-                   IsVisible(row, column, "right") ||
-                   IsVisible(row, column, "down") ||
-                   IsVisible(row, column, "left");
-        }
-
-        private bool IsVisible(int row, int column, string edgeDirection)
-        {
-            switch (edgeDirection)
+            case "up":
             {
-                case "up":
-                {
-                    for (var i = row - 1; i >= 0; i--)
-                        if (_grid[i, column] >= _grid[row, column])
-                            return false;
-                    break;
-                }
-                case "right":
-                {
-                    for (var i = column + 1; i < _grid.GetLength(1); i++)
-                        if (_grid[row, i] >= _grid[row, column])
-                            return false;
-                    break;
-                }
-                case "down":
-                {
-                    for (var i = row + 1; i < _grid.GetLength(0); i++)
-                        if (_grid[i, column] >= _grid[row, column])
-                            return false;
-                    break;
-                }
-                case "left":
-                {
-                    for (var i = column - 1; i >= 0; i--)
-                        if (_grid[row, i] >= _grid[row, column])
-                            return false;
-                    break;
-                }
-                default:
-                    return false;
+                for (var i = row - 1; i >= 0; i--)
+                    if (_grid[i, column] >= _grid[row, column])
+                        return false;
+                break;
             }
-
-            return true;
+            case "right":
+            {
+                for (var i = column + 1; i < _grid.GetLength(1); i++)
+                    if (_grid[row, i] >= _grid[row, column])
+                        return false;
+                break;
+            }
+            case "down":
+            {
+                for (var i = row + 1; i < _grid.GetLength(0); i++)
+                    if (_grid[i, column] >= _grid[row, column])
+                        return false;
+                break;
+            }
+            case "left":
+            {
+                for (var i = column - 1; i >= 0; i--)
+                    if (_grid[row, i] >= _grid[row, column])
+                        return false;
+                break;
+            }
+            default:
+                return false;
         }
 
-        public override int CalculatePart2()
+        return true;
+    }
+
+    public override int CalculatePart2()
+    {
+        var highestScenicScore = 0;
+
+        for (var row = 0; row < _grid.GetLength(0); row++)
+        for (var column = 0; column < _grid.GetLength(1); column++)
         {
-            var highestScenicScore = 0;
-
-            for (var row = 0; row < _grid.GetLength(0); row++)
-            for (var column = 0; column < _grid.GetLength(1); column++)
-            {
-                var scenicScore = CalculateScenicScore(row, column);
-                if (scenicScore > highestScenicScore) highestScenicScore = scenicScore;
-            }
-
-            return highestScenicScore;
+            var scenicScore = CalculateScenicScore(row, column);
+            if (scenicScore > highestScenicScore) highestScenicScore = scenicScore;
         }
 
-        private int CalculateScenicScore(int row, int column)
+        return highestScenicScore;
+    }
+
+    private int CalculateScenicScore(int row, int column)
+    {
+        //stop if you reach an edge or at the first tree that is the same height
+        //or taller than the tree under consideration
+
+        var upScore = 0;
+        var rightScore = 0;
+        var downScore = 0;
+        var leftScore = 0;
+
+        for (var i = row - 1; i >= 0; i--)
         {
-            //stop if you reach an edge or at the first tree that is the same height
-            //or taller than the tree under consideration
-
-            var upScore = 0;
-            var rightScore = 0;
-            var downScore = 0;
-            var leftScore = 0;
-
-            for (var i = row - 1; i >= 0; i--)
-            {
-                upScore++;
-                if (_grid[i, column] >= _grid[row, column]) break;
-            }
-
-            for (var i = column + 1; i < _grid.GetLength(1); i++)
-            {
-                rightScore++;
-                if (_grid[row, i] >= _grid[row, column]) break;
-            }
-
-            for (var i = row + 1; i < _grid.GetLength(0); i++)
-            {
-                downScore++;
-                if (_grid[i, column] >= _grid[row, column]) break;
-            }
-
-            for (var i = column - 1; i >= 0; i--)
-            {
-                leftScore++;
-                if (_grid[row, i] >= _grid[row, column]) break;
-            }
-
-            return upScore * rightScore * downScore * leftScore;
+            upScore++;
+            if (_grid[i, column] >= _grid[row, column]) break;
         }
+
+        for (var i = column + 1; i < _grid.GetLength(1); i++)
+        {
+            rightScore++;
+            if (_grid[row, i] >= _grid[row, column]) break;
+        }
+
+        for (var i = row + 1; i < _grid.GetLength(0); i++)
+        {
+            downScore++;
+            if (_grid[i, column] >= _grid[row, column]) break;
+        }
+
+        for (var i = column - 1; i >= 0; i--)
+        {
+            leftScore++;
+            if (_grid[row, i] >= _grid[row, column]) break;
+        }
+
+        return upScore * rightScore * downScore * leftScore;
     }
 }

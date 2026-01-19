@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace AoC.AoC2022
+﻿namespace AoC.AoC2022
 {
     internal class Program
     {

@@ -1,6 +1,6 @@
 ﻿namespace AoC.Common;
 
-public abstract class AoC<T, TResult1, TResult2> : IAoC<TResult1, TResult2> where T : new()
+public abstract class AoC<T, TResult1, TResult2> : IAoC<TResult1, TResult2>
 {
     private readonly string _dayName;
     private readonly string _inputDirectory;
@@ -17,6 +17,7 @@ public abstract class AoC<T, TResult1, TResult2> : IAoC<TResult1, TResult2> wher
     protected AoC(string dayName) : this(dayName, "InputData")
     {
     }
+
     protected AoC(string dayName, T inputData)
     {
         _dayName = dayName;
@@ -33,10 +34,38 @@ public abstract class AoC<T, TResult1, TResult2> : IAoC<TResult1, TResult2> wher
         Console.WriteLine($"{_dayName} part2 answer: {CalculatePart2()}");
     }
 
-    private T? ParseInputFile()
+    private T ParseInputFile()
     {
-        var inputFile = Path.Combine($"{_inputDirectory}", $"{_dayName}.txt");
+        var inputFile = Path.Combine(_inputDirectory, $"{_dayName}.txt");
+
+        if (!File.Exists(inputFile))
+            try
+            {
+                return (T)Activator.CreateInstance(typeof(T))!;
+            }
+            catch
+            {
+                return default!;
+            }
+
         var inputText = File.ReadAllLines(inputFile);
-        return (T)Activator.CreateInstance(typeof(T), new object[] { inputText });
+
+        try
+        {
+            return (T)Activator.CreateInstance(typeof(T), [inputText])!;
+        }
+        catch
+        {
+            if (typeof(T) == typeof(List<string>)) return (T)(object)new List<string>(inputText);
+
+            try
+            {
+                return (T)Activator.CreateInstance(typeof(T))!;
+            }
+            catch
+            {
+                return default!;
+            }
+        }
     }
 }

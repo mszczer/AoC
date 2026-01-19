@@ -1,71 +1,78 @@
-﻿namespace AoC.AoC2022
+﻿namespace AoC.AoC2022;
+
+internal class Day03(string dayName) : AoC<List<string>, int, int>(dayName)
 {
-    internal class Day03 : AoC<List<string>, int, int>
+    public override int CalculatePart1()
     {
-        public Day03(string dayName) : base(dayName)
+        if (InputData == null || InputData.Count == 0) return 0;
+        return CalculatePrioritiesTotalSum();
+    }
+
+    private int CalculatePrioritiesTotalSum()
+    {
+        var allDuplicates = new List<char>();
+
+        foreach (var rawRucksack in InputData)
         {
+            if (string.IsNullOrEmpty(rawRucksack)) continue;
+            var rucksack = rawRucksack.Trim();
+            allDuplicates.AddRange(FindDuplicatesPerRucksack(rucksack));
         }
 
-        public override int CalculatePart1()
+        return CalculatePrioritiesTotal(allDuplicates);
+    }
+
+    private static int CalculatePrioritiesTotal(IEnumerable<char> allDuplicates)
+    {
+        var sum = 0;
+
+        foreach (var element in allDuplicates)
+            sum += element < 'a' ? element - 38 : element - 96;
+
+        return sum;
+    }
+
+    private static IEnumerable<char> FindDuplicatesPerRucksack(string rucksack)
+    {
+        if (string.IsNullOrEmpty(rucksack)) yield break;
+
+        var compartmentLimit = rucksack.Length / 2;
+        var firstCompartment = rucksack[..compartmentLimit];
+        var secondCompartment = rucksack[compartmentLimit..]; // remainder if odd length
+
+        var firstSet = new HashSet<char>(firstCompartment);
+        var yielded = new HashSet<char>();
+
+        foreach (var c in secondCompartment)
+            if (firstSet.Contains(c) && yielded.Add(c))
+                yield return c;
+    }
+
+    public override int CalculatePart2()
+    {
+        if (InputData == null || InputData.Count < 3) return 0;
+        return CalculatePrioritiesTotal(FindBadges());
+    }
+
+    private IEnumerable<char> FindBadges()
+    {
+        if (InputData == null) yield break;
+
+        for (var i = 0; i + 2 < InputData.Count; i += 3)
         {
-            return CalculatePrioritiesTotalSum();
-        }
+            var s0 = InputData[i] ?? string.Empty;
+            var s1 = InputData[i + 1] ?? string.Empty;
+            var s2 = InputData[i + 2] ?? string.Empty;
 
-        private int CalculatePrioritiesTotalSum()
-        {
-            var allDuplicates = new List<char>();
+            var set0 = new HashSet<char>(s0);
+            var set1 = new HashSet<char>(s1);
 
-            foreach (var rucksack in InputData)
-                allDuplicates.AddRange(FindDuplicatesPerRucksack(rucksack));
-
-            return CalculatePrioritiesTotal(allDuplicates);
-        }
-
-        private static int CalculatePrioritiesTotal(List<char> allDuplicates)
-        {
-            var sum = 0;
-
-            foreach (var element in allDuplicates)
-                sum += element < 97 ? element - 38 : element - 96;
-
-            return sum;
-        }
-
-        private static IEnumerable<char> FindDuplicatesPerRucksack(string rucksack)
-        {
-            var duplicatesPerRucksack = new List<char>();
-
-            var compartmentLimit = rucksack.Length / 2;
-            var firstCompartment = rucksack.Substring(0, compartmentLimit);
-            var secondCompartment = rucksack.Substring(compartmentLimit, compartmentLimit);
-
-            foreach (var c1 in firstCompartment)
-                foreach (var c2 in secondCompartment)
-                    if (c1 == c2 && !duplicatesPerRucksack.Contains(c1))
-                        duplicatesPerRucksack.Add(c1);
-
-            return duplicatesPerRucksack;
-        }
-
-        public override int CalculatePart2()
-        {
-            return CalculatePrioritiesTotal(FindBadges());
-        }
-
-        private List<char> FindBadges()
-        {
-            var badges = new List<char>();
-
-            for (var i = 0; i < InputData.Count; i++)
-                if ((i + 1) % 3 == 0)
-                    foreach (var c in InputData[i])
-                        if (InputData[i - 1].Contains(c) && InputData[i - 2].Contains(c))
-                        {
-                            badges.Add(c);
-                            break;
-                        }
-
-            return badges;
+            foreach (var c in s2)
+                if (set0.Contains(c) && set1.Contains(c))
+                {
+                    yield return c;
+                    break; // only first common char per group
+                }
         }
     }
 }
