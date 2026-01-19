@@ -16,7 +16,7 @@ internal partial class Day14 : AoC<List<string>, int, int>
     private void GetInitialPaths()
     {
         _maxDepth = 0;
-        _rockPoints = new HashSet<Point>();
+        _rockPoints = [];
 
         if (InputData == null) return;
 

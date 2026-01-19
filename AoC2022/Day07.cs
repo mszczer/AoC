@@ -51,18 +51,25 @@ internal class Day07 : AoC<List<string>, int, int>
     private static void UpdateDirectorySizes(FileTreeNode fileTreeElement)
     {
         if (fileTreeElement == null) return;
-        GetFileTreeNodeSize(fileTreeElement);
+        ComputeDirectorySizesRecursive(fileTreeElement);
     }
 
-    private static int GetFileTreeNodeSize(FileTreeNode fileTreeElement)
+    // Compute sizes in-place: files keep their Size, directories get the sum of children sizes.
+    private static void ComputeDirectorySizesRecursive(FileTreeNode fileTreeElement)
     {
-        if (!fileTreeElement.IsDirectory) return fileTreeElement.Size;
+        if (fileTreeElement == null) return;
 
-        var elementTotalSize = fileTreeElement.GetChildren().Sum(GetFileTreeNodeSize);
+        if (!fileTreeElement.IsDirectory)
+            return; // file size already set
+
+        var elementTotalSize = 0;
+        foreach (var child in fileTreeElement.GetChildren())
+        {
+            ComputeDirectorySizesRecursive(child);
+            elementTotalSize += child.Size;
+        }
 
         fileTreeElement.Size = elementTotalSize;
-
-        return elementTotalSize;
     }
 
     private static void AddFileTreeElement(string command, FileTreeNode currentFolder)
