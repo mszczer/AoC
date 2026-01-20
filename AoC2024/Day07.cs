@@ -30,10 +30,8 @@ public class Day07 : AoC<List<string>, long, long>
             .Sum(calibration => calibration[0]);
     }
 
-    private static bool CanProduceTestValue(List<long> calibration)
-    {
-        return CanProduceWithOperators(calibration, ["+", "*"]);
-    }
+    private static bool CanProduceTestValue(List<long> calibration) =>
+        CanProduceWithOperators(calibration, ["+", "*"]);
 
     public override long CalculatePart2()
     {
@@ -42,10 +40,8 @@ public class Day07 : AoC<List<string>, long, long>
             .Sum(calibration => calibration[0]);
     }
 
-    private static bool CanConcatenatedNumbersProduceTestValue(List<long> calibration)
-    {
-        return CanProduceWithOperators(calibration, ["+", "*", "||"]);
-    }
+    private static bool CanConcatenatedNumbersProduceTestValue(List<long> calibration) =>
+        CanProduceWithOperators(calibration, ["+", "*", "||"]);
 
     private static bool CanProduceWithOperators(List<long> calibration, string[] operatorSet)
     {
@@ -78,19 +74,15 @@ public class Day07 : AoC<List<string>, long, long>
         return false;
     }
 
-    private static long ApplyOperator(long result, long next, string op)
-    {
-        return op switch
+    private static long ApplyOperator(long result, long next, string op) =>
+        op switch
         {
             "+" => result + next,
             "*" => result * next,
             "||" => Concat(result, next),
             _ => throw new InvalidOperationException("Unexpected operator value")
         };
-    }
 
-    private static long Concat(long a, long b)
-    {
-        return long.Parse(a.ToString() + b.ToString());
-    }
+    private static long Concat(long a, long b) =>
+        long.Parse(a.ToString() + b.ToString());
 }

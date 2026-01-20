@@ -3,18 +3,19 @@
 public class Day06 : AoC<List<string>, int, int>
 {
     private char[,] _map;
-    private readonly struct Position(int row, int col) : IEquatable<Position>
-    { 
-        public int Row { get; } = row;
-        public int Col { get; } = col;
 
-        public bool Equals(Position other) => Row == other.Row && Col == other.Col;
-        public override bool Equals(object? obj) => obj is Position other && Equals(other);
-        public override int GetHashCode() => HashCode.Combine(Row, Col);
-    }
+    private readonly record struct Position(int Row, int Col);
+
     private Position _startPosition;
-    private enum Direction { Up, Down, Left, Right }
-    
+
+    private enum Direction
+    {
+        Up,
+        Down,
+        Left,
+        Right
+    }
+
     private static readonly Dictionary<Direction, (int dRow, int dCol)> Movement = new()
     {
         [Direction.Up] = (-1, 0),
@@ -36,11 +37,12 @@ public class Day06 : AoC<List<string>, int, int>
         _map = new char[numberOfRows, numberOfColumns];
 
         for (var row = 0; row < numberOfRows; row++)
-            for (var col = 0; col < numberOfColumns; col++)
-            {
-                _map[row, col] = InputData[row][col];
-                if (_map[row, col] == '^') _startPosition = new Position(row, col);
-            }
+        for (var col = 0; col < numberOfColumns; col++)
+        {
+            _map[row, col] = InputData[row][col];
+            if (_map[row, col] == '^')
+                _startPosition = new Position(row, col);
+        }
     }
 
     private void MarkPath(char[,] map)
@@ -51,7 +53,7 @@ public class Day06 : AoC<List<string>, int, int>
         var row = _startPosition.Row;
         var col = _startPosition.Col;
         var direction = Direction.Up;
-        
+
         while (row >= 0 && row < numberOfRows && col >= 0 && col < numberOfColumns)
         {
             map[row, col] = 'X';
@@ -81,8 +83,9 @@ public class Day06 : AoC<List<string>, int, int>
         var cols = map.GetLength(1);
         var newMap = new char[rows, cols];
         for (var i = 0; i < rows; i++)
-            for (var j = 0; j < cols; j++)
-                newMap[i, j] = map[i, j];
+        for (var j = 0; j < cols; j++)
+            newMap[i, j] = map[i, j];
+
         return newMap;
     }
 
@@ -100,7 +103,7 @@ public class Day06 : AoC<List<string>, int, int>
 
     public override int CalculatePart1()
     {
-        var mapWithPath =  CloneMap(_map);
+        var mapWithPath = CloneMap(_map);
 
         MarkPath(mapWithPath);
         var distinctPositions = 0;
@@ -108,9 +111,9 @@ public class Day06 : AoC<List<string>, int, int>
         var numberOfColumns = mapWithPath.GetLength(1);
 
         for (var i = 0; i < numberOfRows; i++)
-            for (var j = 0; j < numberOfColumns; j++)
-                if (mapWithPath[i, j] == 'X')
-                    distinctPositions++;
+        for (var j = 0; j < numberOfColumns; j++)
+            if (mapWithPath[i, j] == 'X')
+                distinctPositions++;
 
         return distinctPositions;
     }
@@ -128,7 +131,7 @@ public class Day06 : AoC<List<string>, int, int>
         while (row >= 0 && row < numberOfRows && col >= 0 && col < numberOfColumns)
         {
             var pos = new Position(row, col);
-            if (pathPositions.Add(pos)) { /* added new position */ }
+            pathPositions.Add(pos);
 
             var (dRow, dCol) = Movement[direction];
             var nextRow = row + dRow;
@@ -136,6 +139,7 @@ public class Day06 : AoC<List<string>, int, int>
 
             if (nextRow < 0 || nextRow >= numberOfRows || nextCol < 0 || nextCol >= numberOfColumns)
                 break;
+
             if (_map[nextRow, nextCol] == '#')
             {
                 direction = RotateClockwise(direction);
@@ -147,7 +151,7 @@ public class Day06 : AoC<List<string>, int, int>
             }
         }
 
-        int infiniteLoopPositions = 0;
+        var infiniteLoopPositions = 0;
         var mapCopy = CloneMap(_map);
 
         foreach (var posToBlock in pathPositions)
@@ -158,7 +162,7 @@ public class Day06 : AoC<List<string>, int, int>
             if (CausesInfiniteLoop(mapCopy, _startPosition, Direction.Up))
                 infiniteLoopPositions++;
 
-            mapCopy[posToBlock.Row, posToBlock.Col] = original; // Restore
+            mapCopy[posToBlock.Row, posToBlock.Col] = original;
         }
 
         return infiniteLoopPositions;
@@ -177,7 +181,6 @@ public class Day06 : AoC<List<string>, int, int>
 
         while (row >= 0 && row < numberOfRows && col >= 0 && col < numberOfColumns)
         {
-            // If we've already visited this state, we are in a loop
             if (!visited.Add((row, col, direction)))
                 return true;
 
@@ -187,6 +190,7 @@ public class Day06 : AoC<List<string>, int, int>
 
             if (nextRow < 0 || nextRow >= numberOfRows || nextCol < 0 || nextCol >= numberOfColumns)
                 return false;
+
             if (mapCopy[nextRow, nextCol] == '#')
             {
                 direction = RotateClockwise(direction);
