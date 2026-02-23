@@ -44,9 +44,9 @@ jobs:
       env:
         CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
-    - name: Upload coverage report to Codacy
-      uses: codacy/codacy-coverage-reporter-action@v1.3.0
-      if: always()
-      with:
-        project-token: ${{ secrets.CODACY_PROJECT_TOKEN }}
-        coverage-reports: "**/*coverage.cobertura.xml"
+   # - name: Upload coverage report to Codacy
+   #   uses: codacy/codacy-coverage-reporter-action@v1.3.0
+   #   if: always()
+   #   with:
+   #     project-token: ${{ secrets.CODACY_PROJECT_TOKEN }}
+   #     coverage-reports: "**/*coverage.cobertura.xml"
