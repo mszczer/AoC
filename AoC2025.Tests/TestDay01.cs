@@ -23,8 +23,18 @@ public class TestDay01
         var list = (IList?)field.GetValue(day) ??
                    throw new InvalidOperationException("Private field '_rotations' is null.");
         list.Clear();
+
+        // Determine the element type from the field's declared type and construct instances at runtime.
+        var elementType = field.FieldType.IsGenericType
+            ? field.FieldType.GetGenericArguments()[0]
+            : typeof(object);
+
         foreach (var r in rotations)
-            list.Add(ValueTuple.Create(r.Direction, r.Distance));
+        {
+            var tupleInstance = Activator.CreateInstance(elementType, r.Direction, r.Distance)
+                                ?? throw new InvalidOperationException("Failed to create tuple instance.");
+            list.Add(tupleInstance);
+        }
     }
 
     [Test]

@@ -26,10 +26,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="InputData\" />
-  </ItemGroup>
-
-  <ItemGroup>
+    <None Update="InputData\TestDay02.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="InputData\TestDay01.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
