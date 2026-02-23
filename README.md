@@ -1,3 +1,4 @@
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/8d41c5064471480d83a9c0239958e709)](https://app.codacy.com/gh/mszczer/AoC?utm_source=github.com&utm_medium=referral&utm_content=mszczer/AoC&utm_campaign=Badge_Grade)
 [![Build and Test](https://github.com/mszczer/AoC/actions/workflows/dotnet.yml/badge.svg)](https://github.com/mszczer/AoC/actions/workflows/dotnet.yml)
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/95ac6c88fad04c6fb2c4b4fdec33cf7b)](https://app.codacy.com/gh/mszczer/AoC/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
 [![Codacy Badge](https://app.codacy.com/project/badge/Coverage/95ac6c88fad04c6fb2c4b4fdec33cf7b)](https://app.codacy.com/gh/mszczer/AoC/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_coverage)
