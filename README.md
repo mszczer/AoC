@@ -1,6 +1,9 @@
+[![Build and Test](https://github.com/mszczer/AoC/actions/workflows/dotnet.yml/badge.svg)](https://github.com/mszczer/AoC/actions/workflows/dotnet.yml)
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/95ac6c88fad04c6fb2c4b4fdec33cf7b)](https://app.codacy.com/gh/mszczer/AoC/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
 [![Codacy Badge](https://app.codacy.com/project/badge/Coverage/95ac6c88fad04c6fb2c4b4fdec33cf7b)](https://app.codacy.com/gh/mszczer/AoC/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_coverage)
-[![Build and Test](https://github.com/mszczer/AoC/actions/workflows/dotnet.yml/badge.svg)](https://github.com/mszczer/AoC/actions/workflows/dotnet.yml)
+![GitHub commit activity](https://img.shields.io/github/commit-activity/m/mszczer/AoC)
+![GitHub last commit](https://img.shields.io/github/last-commit/mszczer/AoC)
+![GitHub top language](https://img.shields.io/github/languages/top/mszczer/AoC)
 
 # Advent of Code Solutions Repository
 
