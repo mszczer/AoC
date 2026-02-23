@@ -4,7 +4,7 @@ namespace AoC.AoC2025;
 
 public class Day02 : AoC<List<string>, long, long>
 {
-    private readonly List<(long Start, long End)> _idRanges = []; // Store ranges as numeric start/end pairs
+    private readonly List<(long Start, long End)> _idRanges = [];
 
     public Day02(string dayName) : base(dayName)
     {
@@ -59,6 +59,47 @@ public class Day02 : AoC<List<string>, long, long>
 
     public override long CalculatePart2()
     {
-        throw new NotImplementedException();
+        long invalidIds = 0;
+
+        foreach (var (start, end) in _idRanges)
+            for (var id = start; id <= end; id++)
+            {
+                var s = id.ToString();
+
+                if (HasRepeatedSubstring(s))
+                    invalidIds += id;
+            }
+
+        return invalidIds;
+    }
+
+    private static bool HasRepeatedSubstring(string s)
+    {
+        var length = s.Length;
+
+        for (var subLen = 1; subLen <= length / 2; subLen++)
+        {
+            if (length % subLen != 0)
+                continue;
+
+            var repeats = length / subLen;
+            var patternSpan = s.AsSpan(0, subLen);
+            var matches = true;
+
+            for (var r = 1; r < repeats; r++)
+            {
+                var offset = r * subLen;
+                if (!s.AsSpan(offset, subLen).SequenceEqual(patternSpan))
+                {
+                    matches = false;
+                    break;
+                }
+            }
+
+            if (matches)
+                return true;
+        }
+
+        return false;
     }
 }
