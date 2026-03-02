@@ -5,14 +5,14 @@ on: workflow_dispatch
 jobs:
   build-and-test:
 
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     
     steps:
     - name: Checkout
-      uses: actions/checkout@v4
+      uses: actions/checkout@v6.0.2
 
     - name: Setup .NET Core
-      uses: actions/setup-dotnet@v4
+      uses: actions/setup-dotnet@v5
     
     - name: Restore dependencies
       run: dotnet restore
@@ -23,19 +23,26 @@ jobs:
     - name: Test
       run: dotnet test 
         --no-build 
-        --verbosity normal 
+        --verbosity normal
         --collect:"XPlat Code Coverage" 
         --logger "trx;LogFileName=test-results.trx"  
-    
+
     - name: Publish test report
-      uses: dorny/test-reporter@v1.9.1
+      uses: dorny/test-reporter@v2.5.0
+      with:
+        name: Unit Tests  
+        path: "**/test-results.trx"
+        reporter: dotnet-trx
+        only-summary: 'false'
+    
+    - name: Upload Codacy coverage report
+      uses: codacy/codacy-coverage-reporter-action@v1.3.0
       if: always()
       with:
-        name: Unit Tests
-        path: "**/test-results.trx"                             
-        reporter: dotnet-trx
-      
+         project-token: ${{ secrets.CODACY_PROJECT_TOKEN }}
+         coverage-reports: "**/*coverage.cobertura.xml"
+
     - name: Upload Codecov coverage report
-      uses: codecov/codecov-action@v5.5.1
+      uses: codecov/codecov-action@v5.5.2
       env:
         CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
