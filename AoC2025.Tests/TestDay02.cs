@@ -24,14 +24,14 @@ public class TestDay02
     public void CalculatePart1_SingleNonMatchingTwoDigitId_ReturnsZero()
     {
         var day = new Day02(TestDayNumber, new List<(long Start, long End)> { (12, 12) });
-        Assert.That(day.CalculatePart1(), Is.EqualTo(0));
+        Assert.That(day.CalculatePart1(), Is.Zero);
     }
 
     [Test]
     public void CalculatePart1_OddLengthId_IsIgnored()
     {
         var day = new Day02(TestDayNumber, new List<(long Start, long End)> { (101, 101) });
-        Assert.That(day.CalculatePart1(), Is.EqualTo(0));
+        Assert.That(day.CalculatePart1(), Is.Zero);
     }
 
     [Test]
@@ -45,7 +45,7 @@ public class TestDay02
     public void CalculatePart1_StartGreaterThanEnd_ReturnsZero()
     {
         var day = new Day02(TestDayNumber, new List<(long Start, long End)> { (50, 10) });
-        Assert.That(day.CalculatePart1(), Is.EqualTo(0));
+        Assert.That(day.CalculatePart1(), Is.Zero);
     }
 
     [Test]
@@ -66,7 +66,7 @@ public class TestDay02
     public void CalculatePart2_SingleNonRepeatingTwoDigitId_ReturnsZero()
     {
         var day = new Day02(TestDayNumber, new List<(long Start, long End)> { (12, 12) });
-        Assert.That(day.CalculatePart2(), Is.EqualTo(0));
+        Assert.That(day.CalculatePart2(), Is.Zero);
     }
 
     [Test]
@@ -80,7 +80,7 @@ public class TestDay02
     public void CalculatePart2_OddLengthNonRepeated_ReturnsZero()
     {
         var day = new Day02(TestDayNumber, new List<(long Start, long End)> { (101, 101) });
-        Assert.That(day.CalculatePart2(), Is.EqualTo(0));
+        Assert.That(day.CalculatePart2(), Is.Zero);
     }
 
     [Test]
@@ -94,7 +94,7 @@ public class TestDay02
     public void CalculatePart2_StartGreaterThanEnd_ReturnsZero()
     {
         var day = new Day02(TestDayNumber, new List<(long Start, long End)> { (50, 10) });
-        Assert.That(day.CalculatePart2(), Is.EqualTo(0));
+        Assert.That(day.CalculatePart2(), Is.Zero);
     }
 
     [Test]
