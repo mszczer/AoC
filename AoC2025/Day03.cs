@@ -2,7 +2,7 @@
 
 namespace AoC.AoC2025;
 
-public class Day03 : AoC<List<string>, int, int>
+public class Day03 : AoC<List<string>, long, long>
 {
     private readonly List<string> _batteryBanks;
 
@@ -22,54 +22,72 @@ public class Day03 : AoC<List<string>, int, int>
         if (inputData == null || inputData.Count == 0)
             throw new InvalidOperationException("InputData is empty or not initialized.");
 
-        return [..inputData];
+        return inputData.ToList();
     }
 
-    public override int CalculatePart1()
+    public override long CalculatePart1()
     {
-        return _batteryBanks.Sum(GetLargestVoltage);
+        return _batteryBanks.Sum(bank => GetLargestVoltage(bank, 2));
     }
 
-    private static int GetLargestVoltage(string bank)
+    public override long CalculatePart2()
     {
-        if (bank.Length < 2)
-            throw new ArgumentException("Bank must contain at least two digits.", nameof(bank));
+        return _batteryBanks.Sum(bank => GetLargestVoltage(bank, 12));
+    }
 
-        var firstIdx = 0;
-        var firstMax = bank[0];
-        for (var i = 0; i < bank.Length - 1; i++)
+    private static long GetLargestVoltage(string bank, int numberOfBatteries)
+    {
+        if (numberOfBatteries <= 0)
+            throw new ArgumentException("Number of batteries must be positive.", nameof(numberOfBatteries));
+
+        if (string.IsNullOrEmpty(bank))
+            throw new ArgumentException("Bank string must not be null or empty.", nameof(bank));
+
+        if (bank.Length < numberOfBatteries)
+            throw new ArgumentException($"Bank must contain at least {numberOfBatteries} digits.", nameof(bank));
+
+        if (bank.Length == numberOfBatteries)
+            return long.Parse(bank);
+
+        var bankLength = bank.Length;
+        var startIdx = 0;
+        var voltage = new char[numberOfBatteries];
+
+        for (var picked = 0; picked < numberOfBatteries; picked++)
         {
-            if (bank[i] > firstMax)
+            var remainingToPick = numberOfBatteries - picked;
+            var remainingChars = bankLength - startIdx;
+
+            // if remaining characters equals needed digits, copy the rest and finish
+            if (remainingChars == remainingToPick)
             {
-                firstMax = bank[i];
-                firstIdx = i;
+                for (var j = 0; j < remainingChars; j++)
+                    voltage[picked + j] = bank[startIdx + j];
+
+                return long.Parse(new string(voltage));
             }
 
-            if (firstMax == '9')
-                break;
-        }
+            var maxAllowedIndex = bankLength - remainingToPick;
+            var maxChar = bank[startIdx];
+            var maxIdx = startIdx;
 
-        var secondIdx = firstIdx + 1;
-        var secondMax = bank[secondIdx];
-        for (var i = secondIdx; i < bank.Length; i++)
-        {
-            if (bank[i] > secondMax)
+            // search for the maximum digit in the allowed window
+            for (var i = startIdx; i <= maxAllowedIndex; i++)
             {
-                secondMax = bank[i];
-                secondIdx = i;
+                var digit = bank[i];
+                if (digit > maxChar)
+                {
+                    maxChar = digit;
+                    maxIdx = i;
+                    if (maxChar == '9') // early exit for best possible digit
+                        break;
+                }
             }
 
-            if (secondMax == '9')
-                break;
+            voltage[picked] = maxChar;
+            startIdx = maxIdx + 1;
         }
 
-        var d1 = firstMax - '0';
-        var d2 = secondMax - '0';
-        return d1 * 10 + d2;
-    }
-
-    public override int CalculatePart2()
-    {
-        throw new NotImplementedException();
+        return long.Parse(new string(voltage));
     }
 }
