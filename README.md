@@ -39,15 +39,19 @@ AoC/
 ├─ AoC2022/                       # 2022 solutions
 │  └─ InputData/                  # puzzle inputs (Day01.txt ... Day25.txt)
 ├─ AoC2022.Test/                  # 2022 tests
+│  └─ InputData/                  # test inputs (TestDay01.txt ... TestDay25.txt)
 ├─ AoC2023/                       # 2023 solutions
 │  └─ InputData/
 ├─ AoC2023.Test/                  # 2023 tests
+│  └─ InputData/
 ├─ AoC2024/                       # 2024 solutions
 │  └─ InputData/
 ├─ AoC2024.Tests/                 # 2024 tests
+│  └─ InputData/
 ├─ AoC2025/                       # 2025 solutions
 │  └─ InputData/
 ├─ AoC2025.Tests/                 # 2025 tests
+│  └─ InputData/
 ├─ Common/                        # shared helpers/utilities (if applicable)
 ├─ .github/workflows/             # CI configuration (GitHub Actions)
 └─ README.md
