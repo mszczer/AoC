@@ -18,14 +18,20 @@ public class TestDay06
     public void Part1_EmptyInput_ThrowsException()
     {
         var input = new List<string>();
-        Assert.Throws<InvalidOperationException>(() => new Day06(TestDayNumber, input));
+        Assert.Throws<InvalidOperationException>(() =>
+        {
+            Day06 day06 = new(TestDayNumber, input);
+        });
     }
 
     [Test]
     public void Part1_SingleRowOnly_ThrowsException()
     {
         var input = new List<string> { "+ *" };
-        Assert.Throws<InvalidOperationException>(() => new Day06(TestDayNumber, input));
+        Assert.Throws<InvalidOperationException>(() =>
+        {
+            Day06 day06 = new(TestDayNumber, input);
+        });
     }
 
     [Test]
@@ -37,7 +43,10 @@ public class TestDay06
             "4 5 6",
             "+ + +"
         };
-        Assert.Throws<FormatException>(() => new Day06(TestDayNumber, input));
+        Assert.Throws<FormatException>(() =>
+        {
+            Day06 day06 = new(TestDayNumber, input);
+        });
     }
 
     [Test]
@@ -71,5 +80,31 @@ public class TestDay06
     {
         var day = new Day06(TestDayNumber);
         Assert.That(day.CalculatePart2(), Is.EqualTo(3263827));
+    }
+
+    [Test]
+    public void Part2_UnknownOperation_ThrowsException()
+    {
+        var input = new List<string>
+        {
+            "1 2",
+            "3 4",
+            "+ -"
+        };
+        var day = new Day06(TestDayNumber, input);
+        Assert.Throws<InvalidOperationException>(() => day.CalculatePart2());
+    }
+
+    [Test]
+    public void Part2_NoNumberRows_ThrowsException()
+    {
+        var input = new List<string>
+        {
+            "+ *"
+        };
+        Assert.Throws<InvalidOperationException>(() =>
+        {
+            Day06 day06 = new(TestDayNumber, input);
+        });
     }
 }

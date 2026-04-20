@@ -5,7 +5,7 @@ namespace AoC.AoC2025;
 public class Day06 : AoC<List<string>, long, long>
 {
     private readonly List<List<int>> _numberRows = [];
-    private readonly List<List<int>> _numberColumns = [];
+    private readonly List<List<long>> _numberColumns = [];
     private readonly List<string> _operations = [];
 
     public Day06(string dayName) : base(dayName)
@@ -34,7 +34,7 @@ public class Day06 : AoC<List<string>, long, long>
             _numberRows.Add(numberRow);
         }
 
-        for (var i = 0; i < _numberRows[0].Count; i++) _numberColumns.Add(new List<int>());
+        for (var i = 0; i < _numberRows[0].Count; i++) _numberColumns.Add(new List<long>());
 
         foreach (var row in _numberRows)
             for (var i = 0; i < row.Count; i++)
@@ -68,22 +68,21 @@ public class Day06 : AoC<List<string>, long, long>
 
         for (var columnIndex = 0; columnIndex < _operations.Count; columnIndex++)
         {
+            ValidateColumnIndex(columnIndex);
             var operation = _operations[columnIndex];
-            var columnResult = CalculateColumnOperation(columnIndex, operation);
+            var columnResult = ApplyOperation(_numberColumns[columnIndex], operation);
             result += columnResult;
         }
 
         return result;
     }
 
-    private long CalculateColumnOperation(int columnIndex, string operation)
+    private static long ApplyOperation(IEnumerable<long> numbers, string operation)
     {
-        ValidateColumnIndex(columnIndex);
-
         return operation switch
         {
-            "+" => SumColumn(columnIndex),
-            "*" => MultiplyColumn(columnIndex),
+            "+" => numbers.Sum(),
+            "*" => numbers.Aggregate(1L, (product, value) => product * value),
             _ => throw new InvalidOperationException($"Unknown operation: {operation}")
         };
     }
@@ -96,70 +95,71 @@ public class Day06 : AoC<List<string>, long, long>
                     $"Column index {columnIndex} is out of range for a row with {row.Count} elements.");
     }
 
-    private long SumColumn(int columnIndex)
-    {
-        return _numberColumns[columnIndex].Sum();
-    }
-
-    private long MultiplyColumn(int columnIndex)
-    {
-        return _numberColumns[columnIndex].Aggregate(1L, (product, value) => product * value);
-    }
-
     public override long CalculatePart2()
     {
         var nonEmptyLines = InputData.Where(line => !string.IsNullOrWhiteSpace(line)).ToList();
         var numberRowStrings = nonEmptyLines.Take(nonEmptyLines.Count - 1).ToList();
+
+        if (numberRowStrings.Count == 0)
+            throw new InvalidOperationException("No number rows found in input data.");
+
+        var verticalNumbers = ParseNumbersVertically(numberRowStrings);
+
+        return CalculateResultFromOperations(verticalNumbers);
+    }
+
+    private List<List<long>> ParseNumbersVertically(List<string> numberRowStrings)
+    {
         var maxLength = numberRowStrings.Max(s => s.Length);
+        var verticalNumbers = new List<List<long>>();
 
-        var problems = new List<List<long>>();
-        for (var i = 0; i < _operations.Count; i++) problems.Add([]);
+        for (var i = 0; i < _operations.Count; i++)
+            verticalNumbers.Add([]);
 
-        var currentProblemIndex = _operations.Count - 1;
+        var currentColumnIndex = _operations.Count - 1;
 
         for (var charPos = maxLength - 1; charPos >= 0; charPos--)
         {
-            var columnDigits = "";
-            var hasDigit = false;
+            var columnDigits = ExtractVerticalDigits(numberRowStrings, charPos);
 
-            foreach (var row in numberRowStrings)
-                if (charPos < row.Length)
-                {
-                    var ch = row[charPos];
-                    if (char.IsDigit(ch))
-                    {
-                        columnDigits += ch;
-                        hasDigit = true;
-                    }
-                }
-
-            if (hasDigit)
+            if (!string.IsNullOrEmpty(columnDigits))
             {
-                problems[currentProblemIndex].Add(long.Parse(columnDigits));
+                verticalNumbers[currentColumnIndex].Add(long.Parse(columnDigits));
             }
-            else if (problems[currentProblemIndex].Count > 0)
+            else if (verticalNumbers[currentColumnIndex].Count > 0)
             {
-                currentProblemIndex--;
-                if (currentProblemIndex < 0) break;
+                currentColumnIndex--;
+                if (currentColumnIndex < 0) break;
             }
         }
 
+        return verticalNumbers;
+    }
+
+    private static string ExtractVerticalDigits(List<string> rows, int charPosition)
+    {
+        var columnDigits = "";
+
+        foreach (var row in rows)
+            if (charPosition < row.Length)
+            {
+                var ch = row[charPosition];
+                if (char.IsDigit(ch)) columnDigits += ch;
+            }
+
+        return columnDigits;
+    }
+
+    private long CalculateResultFromOperations(List<List<long>> numberGroups)
+    {
         long result = 0;
+
         for (var i = 0; i < _operations.Count; i++)
         {
-            var operation = _operations[i];
-            var numbers = problems[i];
+            if (numberGroups[i].Count == 0) continue;
 
-            if (numbers.Count == 0) continue;
-
-            var problemResult = operation switch
-            {
-                "+" => numbers.Sum(),
-                "*" => numbers.Aggregate(1L, (product, value) => product * value),
-                _ => throw new InvalidOperationException($"Unknown operation: {operation}")
-            };
-
-            result += problemResult;
+            var operationResult = ApplyOperation(numberGroups[i], _operations[i]);
+            result += operationResult;
         }
 
         return result;
