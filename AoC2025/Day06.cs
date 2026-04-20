@@ -5,6 +5,7 @@ namespace AoC.AoC2025;
 public class Day06 : AoC<List<string>, long, long>
 {
     private readonly List<List<int>> _numberRows = [];
+    private readonly List<List<int>> _numberColumns = [];
     private readonly List<string> _operations = [];
 
     public Day06(string dayName) : base(dayName)
@@ -22,16 +23,24 @@ public class Day06 : AoC<List<string>, long, long>
         if (InputData == null || InputData.Count == 0)
             throw new InvalidOperationException("InputData is empty or not initialized.");
 
-        if (InputData.Count < 2)
+        var nonEmptyLines = InputData.Where(line => !string.IsNullOrWhiteSpace(line)).ToList();
+
+        if (nonEmptyLines.Count < 2)
             throw new InvalidOperationException("InputData must contain at least 2 rows (numbers and operations).");
 
-        for (var i = 0; i < InputData.Count - 1; i++)
+        for (var i = 0; i < nonEmptyLines.Count - 1; i++)
         {
-            var numberRow = ParseNumberRow(InputData[i]);
+            var numberRow = ParseNumberRow(nonEmptyLines[i]);
             _numberRows.Add(numberRow);
         }
 
-        var operationsRow = InputData[^1];
+        for (var i = 0; i < _numberRows[0].Count; i++) _numberColumns.Add(new List<int>());
+
+        foreach (var row in _numberRows)
+            for (var i = 0; i < row.Count; i++)
+                _numberColumns[i].Add(row[i]);
+
+        var operationsRow = nonEmptyLines[^1];
         var operationParts =
             operationsRow.Split(' ', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
         _operations.AddRange(operationParts);
@@ -89,16 +98,70 @@ public class Day06 : AoC<List<string>, long, long>
 
     private long SumColumn(int columnIndex)
     {
-        return _numberRows.Sum(row => row[columnIndex]);
+        return _numberColumns[columnIndex].Sum();
     }
 
     private long MultiplyColumn(int columnIndex)
     {
-        return _numberRows.Aggregate(1L, (product, row) => product * row[columnIndex]);
+        return _numberColumns[columnIndex].Aggregate(1L, (product, value) => product * value);
     }
 
     public override long CalculatePart2()
     {
-        throw new NotImplementedException();
+        var nonEmptyLines = InputData.Where(line => !string.IsNullOrWhiteSpace(line)).ToList();
+        var numberRowStrings = nonEmptyLines.Take(nonEmptyLines.Count - 1).ToList();
+        var maxLength = numberRowStrings.Max(s => s.Length);
+
+        var problems = new List<List<long>>();
+        for (var i = 0; i < _operations.Count; i++) problems.Add([]);
+
+        var currentProblemIndex = _operations.Count - 1;
+
+        for (var charPos = maxLength - 1; charPos >= 0; charPos--)
+        {
+            var columnDigits = "";
+            var hasDigit = false;
+
+            foreach (var row in numberRowStrings)
+                if (charPos < row.Length)
+                {
+                    var ch = row[charPos];
+                    if (char.IsDigit(ch))
+                    {
+                        columnDigits += ch;
+                        hasDigit = true;
+                    }
+                }
+
+            if (hasDigit)
+            {
+                problems[currentProblemIndex].Add(long.Parse(columnDigits));
+            }
+            else if (problems[currentProblemIndex].Count > 0)
+            {
+                currentProblemIndex--;
+                if (currentProblemIndex < 0) break;
+            }
+        }
+
+        long result = 0;
+        for (var i = 0; i < _operations.Count; i++)
+        {
+            var operation = _operations[i];
+            var numbers = problems[i];
+
+            if (numbers.Count == 0) continue;
+
+            var problemResult = operation switch
+            {
+                "+" => numbers.Sum(),
+                "*" => numbers.Aggregate(1L, (product, value) => product * value),
+                _ => throw new InvalidOperationException($"Unknown operation: {operation}")
+            };
+
+            result += problemResult;
+        }
+
+        return result;
     }
 }

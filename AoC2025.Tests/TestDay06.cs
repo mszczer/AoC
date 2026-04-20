@@ -66,10 +66,10 @@ public class TestDay06
         Assert.Throws<IndexOutOfRangeException>(() => day.CalculatePart1());
     }
 
-    //[Test]
-    //public void Day06_Part2_EndToEnd()
-    //{
-    //    var day = new Day06(TestDayNumber);
-    //    Assert.That(day.CalculatePart1(), Is.EqualTo(3263827));
-    //}
+    [Test]
+    public void Day06_Part2_EndToEnd()
+    {
+        var day = new Day06(TestDayNumber);
+        Assert.That(day.CalculatePart2(), Is.EqualTo(3263827));
+    }
 }
