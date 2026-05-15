@@ -2,7 +2,7 @@
 
 namespace AoC.AoC2025;
 
-public class Day07 : AoC<List<string>, int, int>
+public class Day07 : AoC<List<string>, int, long>
 {
     private const char StartSymbol = 'S';
     private const char SplitterSymbol = '^';
@@ -71,20 +71,57 @@ public class Day07 : AoC<List<string>, int, int>
         var splitCount = 0;
 
         for (var row = 1; row < _rows; row++)
-        for (var col = 0; col < _columns; col++)
-        {
-            var isBeamFromAbove = _tachyonManifold[row - 1, col] == BeamSymbol;
-            var isSplitterAtCurrent = _tachyonManifold[row, col] == SplitterSymbol;
+            for (var col = 0; col < _columns; col++)
+            {
+                var isBeamFromAbove = _tachyonManifold[row - 1, col] == BeamSymbol;
+                var isSplitterAtCurrent = _tachyonManifold[row, col] == SplitterSymbol;
 
-            if (isBeamFromAbove && isSplitterAtCurrent)
-                splitCount++;
-        }
+                if (isBeamFromAbove && isSplitterAtCurrent)
+                    splitCount++;
+            }
 
         return splitCount;
     }
 
-    public override int CalculatePart2()
+    public override long CalculatePart2()
     {
-        throw new NotImplementedException();
+        long pathCount = 0;
+
+        for (var row = 0; row < _rows; row++)
+            for (var col = 0; col < _columns; col++)
+                if (_tachyonManifold[row, col] == StartSymbol)
+                    pathCount = CountPathsFrom(row, col);
+
+        return pathCount;
+    }
+
+    private long CountPathsFrom(int row, int col)
+    {
+        var memo = new Dictionary<(int, int), long>();
+        return CountPathsRecursive(row + 1, col, memo);
+    }
+
+    private long CountPathsRecursive(int row, int col, Dictionary<(int, int), long> memo)
+    {
+        if (col < 0 || col >= _columns)
+            return 0;
+
+        if (row >= _rows)
+            return 1;
+
+        if (memo.TryGetValue((row, col), out var cachedCount))
+            return cachedCount;
+
+        long pathCount;
+        var currentCell = InputData[row][col];
+
+        if (currentCell == SplitterSymbol)
+            pathCount = CountPathsRecursive(row + 1, col - 1, memo) +
+                        CountPathsRecursive(row + 1, col + 1, memo);
+        else
+            pathCount = CountPathsRecursive(row + 1, col, memo);
+
+        memo[(row, col)] = pathCount;
+        return pathCount;
     }
 }

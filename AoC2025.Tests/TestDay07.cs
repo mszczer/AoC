@@ -134,10 +134,133 @@ public class TestDay07
         Assert.That(day.CalculatePart1(), Is.EqualTo(1));
     }
 
-    //[Test]
-    //public void Day07_Part2_EndToEnd()
-    //{
-    //    var day = new Day07(TestDayNumber);
-    //    Assert.That(day.CalculatePart2(), Is.EqualTo(40));
-    //}
+    [Test]
+    public void Day07_Part2_EndToEnd()
+    {
+        var day = new Day07(TestDayNumber);
+        Assert.That(day.CalculatePart2(), Is.EqualTo(40L));
+    }
+
+    [Test]
+    public void Day07_Part2_NoSplitters_OnePath()
+    {
+        var input = new List<string>
+        {
+            "S",
+            ".",
+            ".",
+            "."
+        };
+
+        var day = new Day07(TestDayNumber, input);
+        Assert.That(day.CalculatePart2(), Is.EqualTo(1L));
+    }
+
+    [Test]
+    public void Day07_Part2_SingleSplitter_TwoPaths()
+    {
+        var input = new List<string>
+        {
+            "..S..",
+            ".....",
+            "..^..",
+            "....."
+        };
+
+        var day = new Day07(TestDayNumber, input);
+        Assert.That(day.CalculatePart2(), Is.EqualTo(2L));
+    }
+
+    [Test]
+    public void Day07_Part2_CascadingSplitters_ExponentialGrowth()
+    {
+        var input = new List<string>
+        {
+            "..S..",
+            ".....",
+            "..^..",
+            ".....",
+            ".^.^."
+        };
+
+        var day = new Day07(TestDayNumber, input);
+        Assert.That(day.CalculatePart2(), Is.EqualTo(4L));
+    }
+
+    [Test]
+    public void Day07_Part2_PathGoesOutOfBounds_CountsZero()
+    {
+        var input = new List<string>
+        {
+            "S.",
+            "..",
+            "^."
+        };
+
+        var day = new Day07(TestDayNumber, input);
+        Assert.That(day.CalculatePart2(), Is.EqualTo(1L));
+    }
+
+    [Test]
+    public void Day07_Part2_BothPathsGoOutOfBounds_CountsZero()
+    {
+        var input = new List<string>
+        {
+            "S",
+            ".",
+            "^"
+        };
+
+        var day = new Day07(TestDayNumber, input);
+        Assert.That(day.CalculatePart2(), Is.Zero);
+    }
+
+    [Test]
+    public void Day07_Part2_StartOnLastRow_OnePath()
+    {
+        var input = new List<string>
+        {
+            ".",
+            "S"
+        };
+
+        var day = new Day07(TestDayNumber, input);
+        Assert.That(day.CalculatePart2(), Is.EqualTo(1L));
+    }
+
+    [Test]
+    public void Day07_Part2_ComplexMergingPaths()
+    {
+        var input = new List<string>
+        {
+            "...S...",
+            ".......",
+            "...^...",
+            ".......",
+            "..^.^..",
+            ".......",
+            ".^...^."
+        };
+
+        var day = new Day07(TestDayNumber, input);
+        Assert.That(day.CalculatePart2(), Is.GreaterThan(0L));
+    }
+
+    [Test]
+    public void Day07_Part2_WideSplitterPattern()
+    {
+        var input = new List<string>
+        {
+            ".....S.....",
+            "...........",
+            ".....^.....",
+            "...........",
+            "....^.^....",
+            "...........",
+            "...^...^..."
+        };
+
+        var day = new Day07(TestDayNumber, input);
+        Assert.That(day.CalculatePart2(), Is.EqualTo(6L));
+    }
 }
